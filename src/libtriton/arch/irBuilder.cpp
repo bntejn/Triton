@@ -118,11 +118,11 @@ namespace triton {
       std::set<triton::ast::AbstractNode*> uniqueNodes;
       std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
 
-      auto& loadAccess        = inst.getLoadAccess();
-      auto& readRegisters     = inst.getReadRegisters();
-      auto& readImmediates    = inst.getReadImmediates();
-      auto& storeAccess       = inst.getStoreAccess();
-      auto& writtenRegisters  = inst.getWrittenRegisters();
+      auto loadAccess        = inst.getLoadAccess();
+      auto readRegisters     = inst.getReadRegisters();
+      auto readImmediates    = inst.getReadImmediates();
+      auto storeAccess       = inst.getStoreAccess();
+      auto writtenRegisters  = inst.getWrittenRegisters();
 
       /* Clear unused data */
       inst.memoryAccess.clear();
