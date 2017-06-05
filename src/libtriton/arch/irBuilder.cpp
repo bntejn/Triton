@@ -163,68 +163,68 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
-          if (it->getType() == triton::arch::OP_MEM) {
-            if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-              this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst()); // FIXME: without this line -> win32 failed
-              // FIXME: Should extract nodes
-              it->getMemory().setLeaAst(nullptr);
-            }
-          }
-        }
+        //for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
+        //  if (it->getType() == triton::arch::OP_MEM) {
+        //    if (it->getMemory().getLeaAst()->isSymbolized() == false) {
+        //      this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst()); // FIXME: without this line -> win32 failed
+        //      // FIXME: Should extract nodes
+        //      it->getMemory().setLeaAst(nullptr);
+        //    }
+        //  }
+        //}
 
-        /* Clean implicit and explicit semantics - MEM */
-        for (auto it = loadAccess.begin(); it != loadAccess.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            loadAccess.erase(it++);
-          else
-            ++it;
-        }
+        ///* Clean implicit and explicit semantics - MEM */
+        //for (auto it = loadAccess.begin(); it != loadAccess.end();) {
+        //  if (std::get<1>(*it)->isSymbolized() == false)
+        //    // FIXME: Should extract nodes
+        //    loadAccess.erase(it++);
+        //  else
+        //    ++it;
+        //}
 
-        /* Clean implicit and explicit semantics - REG */
-        for (auto it = readRegisters.begin(); it != readRegisters.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            readRegisters.erase(it++);
-          else
-            ++it;
-        }
+        ///* Clean implicit and explicit semantics - REG */
+        //for (auto it = readRegisters.begin(); it != readRegisters.end();) {
+        //  if (std::get<1>(*it)->isSymbolized() == false)
+        //    // FIXME: Should extract nodes
+        //    readRegisters.erase(it++);
+        //  else
+        //    ++it;
+        //}
 
-        /* Clean implicit and explicit semantics - IMM */
-        for (auto it = readImmediates.begin(); it != readImmediates.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            readImmediates.erase(it++);
-          else
-            ++it;
-        }
+        ///* Clean implicit and explicit semantics - IMM */
+        //for (auto it = readImmediates.begin(); it != readImmediates.end();) {
+        //  if (std::get<1>(*it)->isSymbolized() == false)
+        //    // FIXME: Should extract nodes
+        //    readImmediates.erase(it++);
+        //  else
+        //    ++it;
+        //}
 
-        /* Clean implicit and explicit semantics - MEM */
-        for (auto it = storeAccess.begin(); it != storeAccess.end();) {
-          if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized())
-            ++it;
+        ///* Clean implicit and explicit semantics - MEM */
+        //for (auto it = storeAccess.begin(); it != storeAccess.end();) {
+        //  if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized())
+        //    ++it;
 
-          else if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            storeAccess.erase(it++);
+        //  else if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized() == false)
+        //    // FIXME: Should extract nodes
+        //    storeAccess.erase(it++);
 
-          else if (std::get<0>(*it).getLeaAst()->isSymbolized() == false && std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            storeAccess.erase(it++);
+        //  else if (std::get<0>(*it).getLeaAst()->isSymbolized() == false && std::get<1>(*it)->isSymbolized() == false)
+        //    // FIXME: Should extract nodes
+        //    storeAccess.erase(it++);
 
-          else
-            ++it;
-        }
+        //  else
+        //    ++it;
+        //}
 
-        /* Clean implicit and explicit semantics - REG */
-        for (auto it = writtenRegisters.begin(); it != writtenRegisters.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            writtenRegisters.erase(it++);
-          else
-            ++it;
-        }
+        ///* Clean implicit and explicit semantics - REG */
+        //for (auto it = writtenRegisters.begin(); it != writtenRegisters.end();) {
+        //  if (std::get<1>(*it)->isSymbolized() == false)
+        //    // FIXME: Should extract nodes
+        //    writtenRegisters.erase(it++);
+        //  else
+        //    ++it;
+        //}
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
@@ -244,7 +244,7 @@ namespace triton {
        * If there is no symbolic expression, clean memory operands AST
        * and implicit/explicit semantics AST to avoid memory leak.
        */
-      else if (inst.symbolicExpressions.size() == 0) {
+      if (inst.symbolicExpressions.size() == 0) {
         /* Memory operands */
         for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
           if (it->getType() == triton::arch::OP_MEM) {
