@@ -163,21 +163,21 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        //for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
-        //  if (it->getType() == triton::arch::OP_MEM) {
-        //    if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-        //      this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst()); // FIXME: without this line -> win32 failed
-        //      // FIXME: Should extract nodes
-        //      it->getMemory().setLeaAst(nullptr);
-        //    }
-        //  }
-        //}
+        for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
+          if (it->getType() == triton::arch::OP_MEM) {
+            if (it->getMemory().getLeaAst()->isSymbolized() == false) {
+              //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst()); // FIXME: without this line -> win32 failed
+              // FIXME: Should extract nodes
+              it->getMemory().setLeaAst(nullptr);
+            }
+          }
+        }
 
         /* Clean implicit and explicit semantics - MEM */
         for (auto it = loadAccess.cbegin(); it != loadAccess.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
-            loadAccess.erase(it++);
+            it = loadAccess.erase(it++);
           else
             ++it;
         }
@@ -186,7 +186,7 @@ namespace triton {
         for (auto it = readRegisters.cbegin(); it != readRegisters.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
-            readRegisters.erase(it++);
+            it = readRegisters.erase(it++);
           else
             ++it;
         }
@@ -195,7 +195,7 @@ namespace triton {
         for (auto it = readImmediates.cbegin(); it != readImmediates.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
-            readImmediates.erase(it++);
+            it = readImmediates.erase(it++);
           else
             ++it;
         }
@@ -207,11 +207,11 @@ namespace triton {
 
           else if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
-            storeAccess.erase(it++);
+            it = storeAccess.erase(it++);
 
           else if (std::get<0>(*it).getLeaAst()->isSymbolized() == false && std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
-            storeAccess.erase(it++);
+            it = storeAccess.erase(it++);
 
           else
             ++it;
@@ -221,7 +221,7 @@ namespace triton {
         for (auto it = writtenRegisters.cbegin(); it != writtenRegisters.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
-            writtenRegisters.erase(it++);
+            it = writtenRegisters.erase(it++);
           else
             ++it;
         }
