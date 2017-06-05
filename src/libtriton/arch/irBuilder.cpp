@@ -163,15 +163,15 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
-          if (it->getType() == triton::arch::OP_MEM) {
-            if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-              //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst()); // FIXME: without this line -> win32 failed
-              // FIXME: Should extract nodes
-              it->getMemory().setLeaAst(nullptr);
-            }
-          }
-        }
+        //for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
+        //  if (it->getType() == triton::arch::OP_MEM) {
+        //    if (it->getMemory().getLeaAst()->isSymbolized() == false) {
+        //      //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst()); // FIXME: without this line -> win32 failed
+        //      // FIXME: Should extract nodes
+        //      it->getMemory().setLeaAst(nullptr);
+        //    }
+        //  }
+        //}
 
         /* Clean implicit and explicit semantics - MEM */
         for (auto it = loadAccess.cbegin(); it != loadAccess.cend();) {
