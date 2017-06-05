@@ -244,14 +244,14 @@ namespace triton {
        * If there is no symbolic expression, clean memory operands AST
        * and implicit/explicit semantics AST to avoid memory leak.
        */
-      else if (inst.symbolicExpressions.size() == 0) {
-        /* Memory operands */
-        for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
-          if (it->getType() == triton::arch::OP_MEM) {
-            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-            it->getMemory().setLeaAst(nullptr);
-          }
-        }
+      if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
+        ///* Memory operands */
+        //for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
+        //  if (it->getType() == triton::arch::OP_MEM) {
+        //    this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+        //    it->getMemory().setLeaAst(nullptr);
+        //  }
+        //}
 
         /* Implicit and explicit semantics - MEM */
         for (auto it = loadAccess.begin(); it != loadAccess.end(); it++)
