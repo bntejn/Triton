@@ -118,11 +118,11 @@ namespace triton {
       std::set<triton::ast::AbstractNode*> uniqueNodes;
       std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
 
-      auto loadAccess        = inst.getLoadAccess();
-      auto readRegisters     = inst.getReadRegisters();
-      auto readImmediates    = inst.getReadImmediates();
-      auto storeAccess       = inst.getStoreAccess();
-      auto writtenRegisters  = inst.getWrittenRegisters();
+      auto& loadAccess        = inst.getLoadAccess();
+      auto& readRegisters     = inst.getReadRegisters();
+      auto& readImmediates    = inst.getReadImmediates();
+      auto& storeAccess       = inst.getStoreAccess();
+      auto& writtenRegisters  = inst.getWrittenRegisters();
 
       /* Clear unused data */
       inst.memoryAccess.clear();
@@ -174,7 +174,7 @@ namespace triton {
         //}
 
         /* Clean implicit and explicit semantics - MEM */
-        for (auto it = loadAccess.begin(); it != loadAccess.end();) {
+        for (auto it = loadAccess.cbegin(); it != loadAccess.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
             loadAccess.erase(it++);
@@ -183,7 +183,7 @@ namespace triton {
         }
 
         /* Clean implicit and explicit semantics - REG */
-        for (auto it = readRegisters.begin(); it != readRegisters.end();) {
+        for (auto it = readRegisters.cbegin(); it != readRegisters.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
             readRegisters.erase(it++);
@@ -192,7 +192,7 @@ namespace triton {
         }
 
         /* Clean implicit and explicit semantics - IMM */
-        for (auto it = readImmediates.begin(); it != readImmediates.end();) {
+        for (auto it = readImmediates.cbegin(); it != readImmediates.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
             readImmediates.erase(it++);
@@ -201,7 +201,7 @@ namespace triton {
         }
 
         /* Clean implicit and explicit semantics - MEM */
-        for (auto it = storeAccess.begin(); it != storeAccess.end();) {
+        for (auto it = storeAccess.cbegin(); it != storeAccess.cend();) {
           if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized())
             ++it;
 
@@ -218,7 +218,7 @@ namespace triton {
         }
 
         /* Clean implicit and explicit semantics - REG */
-        for (auto it = writtenRegisters.begin(); it != writtenRegisters.end();) {
+        for (auto it = writtenRegisters.cbegin(); it != writtenRegisters.cend();) {
           if (std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
             writtenRegisters.erase(it++);
