@@ -269,8 +269,8 @@ namespace triton {
         if (std::get<1>(*it)->isSymbolized())
           newItems.insert(*it);
         if (isStoreAccess) {
-          if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
-            newItems.insert(*it);
+          //if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
+          //  newItems.insert(*it);
         }
       }
 
