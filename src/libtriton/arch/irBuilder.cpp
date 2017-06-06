@@ -232,14 +232,14 @@ namespace triton {
 
 
     template <class T>
-    void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) {
+    void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
       for (auto it = items.cbegin(); it != items.cend(); it++)
         this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
       items.clear();
     }
 
 
-    void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) {
+    void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
       for (auto it = operands.begin(); it != operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
           this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
@@ -250,7 +250,7 @@ namespace triton {
 
 
     template <class T>
-    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) {
+    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
       T newItems;
 
       for (auto it = items.cbegin(); it != items.cend(); it++) {
@@ -262,7 +262,7 @@ namespace triton {
     }
 
 
-    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess) {
+    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess) const {
       std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
 
       for (auto it = items.cbegin(); it != items.cend(); it++) {
@@ -278,7 +278,7 @@ namespace triton {
     }
 
 
-    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) {
+    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
       for (auto it = operands.begin(); it!= operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
           if (it->getMemory().getLeaAst()->isSymbolized() == false) {
