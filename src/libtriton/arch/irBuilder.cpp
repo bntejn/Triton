@@ -157,22 +157,22 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
         /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
 
         /* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
 
         /* Clean implicit and explicit semantics - IMM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess(), true);
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess(), true);
 
         /* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
