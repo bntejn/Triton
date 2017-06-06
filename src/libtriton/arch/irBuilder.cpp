@@ -251,36 +251,30 @@ namespace triton {
 
     template <class T>
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) {
-      for (auto it = items.begin(); it != items.end();) {
-        if (std::get<1>(*it)->isSymbolized() == false)
-          it = items.erase(it);
-        else
-          ++it;
+      T newItems;
+
+      for (auto it = items.begin(); it != items.end(); it++) {
+        if (std::get<1>(*it)->isSymbolized() == true)
+          newItems.insert(*it);
       }
+
+      items = newItems;
     }
 
 
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess) {
-      if (isStoreAccess) {
-        for (auto it = items.begin(); it != items.end();) {
-          if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized())
-            ++it;
-          else if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized() == false)
-            it = items.erase(it);
-          else if (std::get<0>(*it).getLeaAst()->isSymbolized() == false && std::get<1>(*it)->isSymbolized() == false)
-            it = items.erase(it);
-          else
-            ++it;
+      std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
+
+      for (auto it = items.begin(); it != items.end(); it++) {
+        if (std::get<1>(*it)->isSymbolized())
+          newItems.insert(*it);
+        if (isStoreAccess) {
+          if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
+            newItems.insert(*it);
         }
       }
-      else {
-        for (auto it = items.begin(); it != items.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            it = items.erase(it);
-          else
-            ++it;
-        }
-      }
+
+      items = newItems;
     }
 
 
