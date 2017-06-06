@@ -252,8 +252,10 @@ namespace triton {
     template <class T>
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) {
       for (auto it = items.begin(); it != items.end();) {
-        if (std::get<1>(*it)->isSymbolized() == false)
+        if (std::get<1>(*it)->isSymbolized() == false) {
+          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
           it = items.erase(it);
+        }
         else
           ++it;
       }
@@ -275,8 +277,10 @@ namespace triton {
       }
       else {
         for (auto it = items.begin(); it != items.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
+          if (std::get<1>(*it)->isSymbolized() == false) {
+            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
             it = items.erase(it);
+          }
           else
             ++it;
         }
