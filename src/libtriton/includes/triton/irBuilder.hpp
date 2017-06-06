@@ -61,6 +61,21 @@ namespace triton {
         //! Removes all symbolic expressions of an instruction.
         void removeSymbolicExpressions(triton::arch::Instruction& inst, std::set<triton::ast::AbstractNode*>& uniqueNodes);
 
+        //! Collects untainted nodes from a set.
+        template <class T> void collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items);
+
+        //! Collects untainted nodes from operands.
+        void collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands);
+
+        //! Collects unsymbolized nodes from a set.
+        template <class T> void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items);
+
+        //! Collects unsymbolized nodes from a set of memory.
+        void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess=false);
+
+        //! Collects unsymbolized nodes from operands.
+        void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands);
+
       protected:
         //! x86 ISA builder.
         triton::arch::SemanticsInterface* x86Isa;
