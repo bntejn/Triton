@@ -156,11 +156,11 @@ namespace triton {
        * concrete expressions and their AST nodes.
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
-        ///* Clean memory operands */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+        /* Clean memory operands */
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
-        /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
+        ///* Clean implicit and explicit semantics - MEM */
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
 
         /* Clean implicit and explicit semantics - REG */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
