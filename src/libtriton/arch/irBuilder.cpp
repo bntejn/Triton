@@ -215,7 +215,7 @@ namespace triton {
       // ----------------------------------------------------------------------
 
       /* Free collected nodes */
-      this->astGarbageCollector.freeAstNodes(uniqueNodes);
+      //this->astGarbageCollector.freeAstNodes(uniqueNodes);
 
       if (!this->symbolicEngine->isEnabled())
         this->astGarbageCollector = this->backupAstGarbageCollector;
