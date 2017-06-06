@@ -253,7 +253,7 @@ namespace triton {
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) {
       T newItems;
 
-      for (auto it = items.begin(); it != items.end(); it++) {
+      for (auto it = items.cbegin(); it != items.cend(); it++) {
         if (std::get<1>(*it)->isSymbolized() == true)
           newItems.insert(*it);
       }
@@ -265,7 +265,7 @@ namespace triton {
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess) {
       std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
 
-      for (auto it = items.begin(); it != items.end(); it++) {
+      for (auto it = items.cbegin(); it != items.cend(); it++) {
         if (std::get<1>(*it)->isSymbolized())
           newItems.insert(*it);
         if (isStoreAccess) {
