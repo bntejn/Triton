@@ -166,7 +166,7 @@ namespace triton {
         //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
 
         /* Clean implicit and explicit semantics - IMM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Clean implicit and explicit semantics - MEM */
         //this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess(), true);
@@ -194,22 +194,22 @@ namespace triton {
        */
       if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
         /* Memory operands */
-        this->collectUntaintedNodes(uniqueNodes, inst.operands);
+        //this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
         /* Implicit and explicit semantics - MEM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
+        //this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
 
         /* Implicit and explicit semantics - REG */
-        this->collectUntaintedNodes(uniqueNodes, inst.getReadRegisters());
+        //this->collectUntaintedNodes(uniqueNodes, inst.getReadRegisters());
 
         /* Implicit and explicit semantics - IMM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getReadImmediates());
+        //this->collectUntaintedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Implicit and explicit semantics - MEM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getStoreAccess());
+        //this->collectUntaintedNodes(uniqueNodes, inst.getStoreAccess());
 
         /* Implicit and explicit semantics - REG */
-        this->collectUntaintedNodes(uniqueNodes, inst.getWrittenRegisters());
+        //this->collectUntaintedNodes(uniqueNodes, inst.getWrittenRegisters());
       }
 
       // ----------------------------------------------------------------------
