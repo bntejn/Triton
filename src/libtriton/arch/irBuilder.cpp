@@ -166,7 +166,7 @@ namespace triton {
         //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
 
         /* Clean implicit and explicit semantics - IMM */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Clean implicit and explicit semantics - MEM */
         //this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess(), true);
