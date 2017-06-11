@@ -144,9 +144,9 @@ namespace triton {
        * execution only on tainted instructions, we delete all
        * expressions untainted and their AST nodes.
        */
-      if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
-        this->removeSymbolicExpressions(inst, uniqueNodes);
-      }
+      //if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
+      //  this->removeSymbolicExpressions(inst, uniqueNodes);
+      //}
 
       // ----------------------------------------------------------------------
 
@@ -155,67 +155,67 @@ namespace triton {
        * execution only on symbolized expressions, we delete all
        * concrete expressions and their AST nodes.
        */
-      if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
-        /* Clean memory operands */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+      //if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
+      //  /* Clean memory operands */
+      //  //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
-        /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
+      //  /* Clean implicit and explicit semantics - MEM */
+      //  this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
 
-        /* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
+      //  /* Clean implicit and explicit semantics - REG */
+      //  this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
 
-        /* Clean implicit and explicit semantics - IMM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
+      //  /* Clean implicit and explicit semantics - IMM */
+      //  this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
 
-        /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess());
+      //  /* Clean implicit and explicit semantics - MEM */
+      //  this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess());
 
-        /* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
+      //  /* Clean implicit and explicit semantics - REG */
+      //  this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
 
-        /* Clean symbolic expressions */
-        for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          if ((*it)->isSymbolized() == false) {
-            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-            this->symbolicEngine->removeSymbolicExpression((*it)->getId());
-          }
-          else
-            newVector.push_back(*it);
-        }
-        inst.symbolicExpressions = newVector;
-      }
+      //  /* Clean symbolic expressions */
+      //  for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
+      //    if ((*it)->isSymbolized() == false) {
+      //      this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+      //      this->symbolicEngine->removeSymbolicExpression((*it)->getId());
+      //    }
+      //    else
+      //      newVector.push_back(*it);
+      //  }
+      //  inst.symbolicExpressions = newVector;
+      //}
 
-      // ----------------------------------------------------------------------
+      //// ----------------------------------------------------------------------
 
-      /*
-       * If there is no symbolic expression, clean memory operands AST
-       * and implicit/explicit semantics AST to avoid memory leak.
-       */
-      if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
-        /* Memory operands */
-        //this->collectUntaintedNodes(uniqueNodes, inst.operands);
+      ///*
+      // * If there is no symbolic expression, clean memory operands AST
+      // * and implicit/explicit semantics AST to avoid memory leak.
+      // */
+      //if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
+      //  /* Memory operands */
+      //  //this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
-        /* Implicit and explicit semantics - MEM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
+      //  /* Implicit and explicit semantics - MEM */
+      //  this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
 
-        /* Implicit and explicit semantics - REG */
-        this->collectUntaintedNodes(uniqueNodes, inst.getReadRegisters());
+      //  /* Implicit and explicit semantics - REG */
+      //  this->collectUntaintedNodes(uniqueNodes, inst.getReadRegisters());
 
-        /* Implicit and explicit semantics - IMM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getReadImmediates());
+      //  /* Implicit and explicit semantics - IMM */
+      //  this->collectUntaintedNodes(uniqueNodes, inst.getReadImmediates());
 
-        /* Implicit and explicit semantics - MEM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getStoreAccess());
+      //  /* Implicit and explicit semantics - MEM */
+      //  this->collectUntaintedNodes(uniqueNodes, inst.getStoreAccess());
 
-        /* Implicit and explicit semantics - REG */
-        this->collectUntaintedNodes(uniqueNodes, inst.getWrittenRegisters());
-      }
+      //  /* Implicit and explicit semantics - REG */
+      //  this->collectUntaintedNodes(uniqueNodes, inst.getWrittenRegisters());
+      //}
 
-      // ----------------------------------------------------------------------
+      //// ----------------------------------------------------------------------
 
-      /* Free collected nodes */
-      this->astGarbageCollector.freeAstNodes(uniqueNodes);
+      ///* Free collected nodes */
+      //this->astGarbageCollector.freeAstNodes(uniqueNodes);
 
       if (!this->symbolicEngine->isEnabled())
         this->astGarbageCollector = this->backupAstGarbageCollector;
