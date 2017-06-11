@@ -266,8 +266,10 @@ namespace triton {
       std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
 
       for (auto it = items.cbegin(); it != items.cend(); it++) {
-        if (std::get<1>(*it)->isSymbolized())
+        if (std::get<1>(*it)->isSymbolized()) {
           newItems.insert(*it);
+          continue;
+        }
         if (isStoreAccess) {
           if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
             newItems.insert(*it);
