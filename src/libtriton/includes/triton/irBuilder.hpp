@@ -65,7 +65,7 @@ namespace triton {
         template <class T> void collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const;
 
         //! Collects untainted nodes from operands.
-        void collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const;
+        //void collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const;
 
         //! Collects unsymbolized nodes from a set.
         template <class T> void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const;
@@ -74,7 +74,7 @@ namespace triton {
         //void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess=false) const;
 
         //! Collects unsymbolized nodes from operands.
-        void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const;
+        //void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const;
 
       protected:
         //! x86 ISA builder.
