@@ -175,15 +175,15 @@ namespace triton {
         //this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
 
         /* Clean symbolic expressions */
-        for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          if ((*it)->isSymbolized() == false) {
-            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-            this->symbolicEngine->removeSymbolicExpression((*it)->getId());
-          }
-          else
-            newVector.push_back(*it);
-        }
-        inst.symbolicExpressions = newVector;
+        //for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
+        //  if ((*it)->isSymbolized() == false) {
+        //    this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+        //    this->symbolicEngine->removeSymbolicExpression((*it)->getId());
+        //  }
+        //  else
+        //    newVector.push_back(*it);
+        //}
+        //inst.symbolicExpressions = newVector;
       }
 
       // ----------------------------------------------------------------------
