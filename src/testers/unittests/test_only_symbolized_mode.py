@@ -150,7 +150,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.processing(inst)
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x1337)
-        self.assertIsNone(inst.getOperands()[1].getLeaAst())
+        #self.assertIsNone(inst.getOperands()[1].getLeaAst())
 
     def test_8(self):
         ctx = TritonContext()
