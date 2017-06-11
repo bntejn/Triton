@@ -169,7 +169,7 @@ namespace triton {
         this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess(), true);
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess());
 
         /* Clean implicit and explicit semantics - REG */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
@@ -262,22 +262,22 @@ namespace triton {
     }
 
 
-    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess) const {
-      std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
+    //void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess) const {
+    //  std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
 
-      for (auto it = items.cbegin(); it != items.cend(); it++) {
-        if (std::get<1>(*it)->isSymbolized()) {
-          newItems.insert(*it);
-          continue;
-        }
-        //if (isStoreAccess) {
-        //  if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
-        //    newItems.insert(*it);
-        //}
-      }
+    //  for (auto it = items.cbegin(); it != items.cend(); it++) {
+    //    if (std::get<1>(*it)->isSymbolized()) {
+    //      newItems.insert(*it);
+    //      continue;
+    //    }
+    //    //if (isStoreAccess) {
+    //    //  if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
+    //    //    newItems.insert(*it);
+    //    //}
+    //  }
 
-      items = newItems;
-    }
+    //  items = newItems;
+    //}
 
 
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
