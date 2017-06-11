@@ -144,9 +144,9 @@ namespace triton {
        * execution only on tainted instructions, we delete all
        * expressions untainted and their AST nodes.
        */
-      //if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
-      //  this->removeSymbolicExpressions(inst, uniqueNodes);
-      //}
+      if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
+        this->removeSymbolicExpressions(inst, uniqueNodes);
+      }
 
       // ----------------------------------------------------------------------
 
