@@ -157,33 +157,33 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
         /* Clean implicit and explicit semantics - MEM */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
 
         /* Clean implicit and explicit semantics - REG */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
 
         /* Clean implicit and explicit semantics - IMM */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Clean implicit and explicit semantics - MEM */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess(), true);
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess(), true);
 
         /* Clean implicit and explicit semantics - REG */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
 
         /* Clean symbolic expressions */
-        //for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-        //  if ((*it)->isSymbolized() == false) {
-        //    this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-        //    this->symbolicEngine->removeSymbolicExpression((*it)->getId());
-        //  }
-        //  else
-        //    newVector.push_back(*it);
-        //}
-        //inst.symbolicExpressions = newVector;
+        for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
+          if ((*it)->isSymbolized() == false) {
+            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+            this->symbolicEngine->removeSymbolicExpression((*it)->getId());
+          }
+          else
+            newVector.push_back(*it);
+        }
+        inst.symbolicExpressions = newVector;
       }
 
       // ----------------------------------------------------------------------
@@ -194,28 +194,28 @@ namespace triton {
        */
       if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
         /* Memory operands */
-        //this->collectUntaintedNodes(uniqueNodes, inst.operands);
+        this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
         /* Implicit and explicit semantics - MEM */
-        //this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
+        this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
 
         /* Implicit and explicit semantics - REG */
-        //this->collectUntaintedNodes(uniqueNodes, inst.getReadRegisters());
+        this->collectUntaintedNodes(uniqueNodes, inst.getReadRegisters());
 
         /* Implicit and explicit semantics - IMM */
-        //this->collectUntaintedNodes(uniqueNodes, inst.getReadImmediates());
+        this->collectUntaintedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Implicit and explicit semantics - MEM */
-        //this->collectUntaintedNodes(uniqueNodes, inst.getStoreAccess());
+        this->collectUntaintedNodes(uniqueNodes, inst.getStoreAccess());
 
         /* Implicit and explicit semantics - REG */
-        //this->collectUntaintedNodes(uniqueNodes, inst.getWrittenRegisters());
+        this->collectUntaintedNodes(uniqueNodes, inst.getWrittenRegisters());
       }
 
       // ----------------------------------------------------------------------
 
       /* Free collected nodes */
-      //this->astGarbageCollector.freeAstNodes(uniqueNodes);
+      this->astGarbageCollector.freeAstNodes(uniqueNodes);
 
       if (!this->symbolicEngine->isEnabled())
         this->astGarbageCollector = this->backupAstGarbageCollector;
@@ -243,7 +243,7 @@ namespace triton {
       for (auto it = operands.begin(); it != operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
           this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-          //it->getMemory().setLeaAst(nullptr);
+          it->getMemory().setLeaAst(nullptr);
         }
       }
     }
@@ -269,8 +269,8 @@ namespace triton {
         if (std::get<1>(*it)->isSymbolized())
           newItems.insert(*it);
         if (isStoreAccess) {
-          //if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
-          //  newItems.insert(*it);
+          if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
+            newItems.insert(*it);
         }
       }
 
@@ -282,8 +282,8 @@ namespace triton {
       for (auto it = operands.begin(); it!= operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
           if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-            //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-            //it->getMemory().setLeaAst(nullptr);
+            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+            it->getMemory().setLeaAst(nullptr);
           }
         }
       }
