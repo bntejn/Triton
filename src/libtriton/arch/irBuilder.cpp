@@ -193,7 +193,7 @@ namespace triton {
        * and implicit/explicit semantics AST to avoid memory leak.
        */
       //if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
-      if (inst.symbolicExpressions.size() == 0) {
+      else if (inst.symbolicExpressions.size() == 0) {
         /* Memory operands */
         this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
