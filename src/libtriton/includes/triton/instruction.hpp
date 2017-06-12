@@ -66,21 +66,6 @@ namespace triton {
         //! The prefix of the instruction. This field is set at the disassembly level.
         triton::uint32 prefix;
 
-        //! Implicit and explicit load access (read). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> loadAccess;
-
-        //! Implicit and explicit store access (write). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> storeAccess;
-
-        //! Implicit and explicit register inputs (read). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> readRegisters;
-
-        //! Implicit and explicit register outputs (write). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> writtenRegisters;
-
-        //! Implicit and explicit immediate inputs (read). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>> readImmediates;
-
         //! True if this instruction is a branch. This field is set at the disassembly level.
         bool branch;
 
@@ -111,6 +96,21 @@ namespace triton {
 
         //! The semantics set of the instruction.
         std::vector<triton::engines::symbolic::SymbolicExpression*> symbolicExpressions;
+
+        //! Implicit and explicit load access (read). This field is set at the semantics level.
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> loadAccess;
+
+        //! Implicit and explicit store access (write). This field is set at the semantics level.
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> storeAccess;
+
+        //! Implicit and explicit register inputs (read). This field is set at the semantics level.
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> readRegisters;
+
+        //! Implicit and explicit register outputs (write). This field is set at the semantics level.
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> writtenRegisters;
+
+        //! Implicit and explicit immediate inputs (read). This field is set at the semantics level.
+        std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>> readImmediates;
 
         //! Constructor.
         Instruction();

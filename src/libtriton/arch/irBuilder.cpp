@@ -157,22 +157,22 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
         /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.loadAccess);
 
         ///* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.readRegisters);
 
         ///* Clean implicit and explicit semantics - IMM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.readImmediates);
 
         ///* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.storeAccess);
 
         ///* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.writtenRegisters);
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.cbegin(); it != inst.symbolicExpressions.cend(); it++) {
@@ -198,19 +198,19 @@ namespace triton {
         this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
         /* Implicit and explicit semantics - MEM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
+        this->collectUntaintedNodes(uniqueNodes, inst.loadAccess);
 
         /* Implicit and explicit semantics - REG */
-        this->collectUntaintedNodes(uniqueNodes, inst.getReadRegisters());
+        this->collectUntaintedNodes(uniqueNodes, inst.readRegisters);
 
         /* Implicit and explicit semantics - IMM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getReadImmediates());
+        this->collectUntaintedNodes(uniqueNodes, inst.readImmediates);
 
         /* Implicit and explicit semantics - MEM */
-        this->collectUntaintedNodes(uniqueNodes, inst.getStoreAccess());
+        this->collectUntaintedNodes(uniqueNodes, inst.storeAccess);
 
         /* Implicit and explicit semantics - REG */
-        this->collectUntaintedNodes(uniqueNodes, inst.getWrittenRegisters());
+        this->collectUntaintedNodes(uniqueNodes, inst.writtenRegisters);
       }
 
       //// ----------------------------------------------------------------------
@@ -261,24 +261,6 @@ namespace triton {
 
       items = newItems;
     }
-
-
-    //void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess) const {
-    //  std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
-
-    //  for (auto it = items.cbegin(); it != items.cend(); it++) {
-    //    if (std::get<1>(*it)->isSymbolized()) {
-    //      newItems.insert(*it);
-    //      continue;
-    //    }
-    //    //if (isStoreAccess) {
-    //    //  if (std::get<0>(*it).getLeaAst() != nullptr && std::get<0>(*it).getLeaAst()->isSymbolized())
-    //    //    newItems.insert(*it);
-    //    //}
-    //  }
-
-    //  items = newItems;
-    //}
 
 
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
