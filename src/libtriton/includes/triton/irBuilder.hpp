@@ -68,7 +68,7 @@ namespace triton {
         void collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const;
 
         //! Collects unsymbolized nodes from a set.
-        template <class T> void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const;
+        template <class T> void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T* items) const;
 
         //! Collects unsymbolized nodes from a set of memory.
         //void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items, bool isStoreAccess=false) const;

@@ -160,19 +160,19 @@ namespace triton {
         //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
         /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
+        this->collectUnsymbolizedNodes(uniqueNodes, &inst.getLoadAccess());
 
         /* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadRegisters());
+        this->collectUnsymbolizedNodes(uniqueNodes, &inst.getReadRegisters());
 
         /* Clean implicit and explicit semantics - IMM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
+        this->collectUnsymbolizedNodes(uniqueNodes, &inst.getReadImmediates());
 
         /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess());
+        this->collectUnsymbolizedNodes(uniqueNodes, &inst.getStoreAccess());
 
         /* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
+        this->collectUnsymbolizedNodes(uniqueNodes, &inst.getWrittenRegisters());
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
@@ -251,15 +251,15 @@ namespace triton {
 
 
     template <class T>
-    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
+    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T* items) const {
       T newItems;
 
-      for (auto it = items.cbegin(); it != items.cend(); it++) {
+      for (auto it = items->cbegin(); it != items->cend(); it++) {
         if (std::get<1>(*it)->isSymbolized() == true)
           newItems.insert(*it);
       }
 
-      //items = newItems;
+      *items = newItems;
     }
 
 
