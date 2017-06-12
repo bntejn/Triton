@@ -157,7 +157,7 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+        //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
         /* Clean implicit and explicit semantics - MEM */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
@@ -169,10 +169,10 @@ namespace triton {
         this->collectUnsymbolizedNodes(uniqueNodes, inst.getReadImmediates());
 
         /* Clean implicit and explicit semantics - MEM */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getStoreAccess());
 
         /* Clean implicit and explicit semantics - REG */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.getWrittenRegisters());
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
@@ -285,8 +285,8 @@ namespace triton {
       for (auto it = operands.begin(); it!= operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
           if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-            it->getMemory().setLeaAst(nullptr);
+            //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+            //it->getMemory().setLeaAst(nullptr);
           }
         }
       }
