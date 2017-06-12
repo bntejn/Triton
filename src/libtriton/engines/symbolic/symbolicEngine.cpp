@@ -569,9 +569,7 @@ namespace triton {
         if (expression->getAst())
             this->setConcreteSymbolicVariableValue(*symVar, expression->getAst()->evaluate());
 
-        tmp->setParent(expression->getAst()->getParents());
         expression->setAst(tmp);
-        tmp->init();
 
         return symVar;
       }
@@ -616,9 +614,7 @@ namespace triton {
           }
           else {
             se = this->getSymbolicExpressionFromId(memSymId);
-            tmp->setParent(se->getAst()->getParents());
             se->setAst(tmp);
-            tmp->init();
             se->setOriginMemory(triton::arch::MemoryAccess(memAddr+index, BYTE_SIZE, tmp->evaluate()));
           }
 
@@ -665,9 +661,7 @@ namespace triton {
           /* Setup the concrete value to the symbolic variable */
           this->setConcreteSymbolicVariableValue(*symVar, cv);
           /* Set the AST node */
-          tmp->setParent(expression->getAst()->getParents());
           expression->setAst(tmp);
-          tmp->init();
         }
 
         return symVar;
