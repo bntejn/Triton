@@ -253,10 +253,9 @@ namespace triton {
 
       /* Adds an aligned memory */
       void SymbolicEngine::addAlignedMemory(triton::uint64 address, triton::uint32 size, triton::ast::AbstractNode* node) {
-        if (this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED) && node->isSymbolized() == false)
-          return;
         this->removeAlignedMemory(address, size);
-        this->alignedMemoryReference[std::make_pair(address, size)] = node;
+        if (!(this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED) && node->isSymbolized() == false))
+          this->alignedMemoryReference[std::make_pair(address, size)] = node;
       }
 
 
