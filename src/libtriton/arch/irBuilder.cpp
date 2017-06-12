@@ -259,7 +259,7 @@ namespace triton {
           newItems.insert(*it);
       }
 
-      items = newItems;
+      //items = newItems;
     }
 
 
