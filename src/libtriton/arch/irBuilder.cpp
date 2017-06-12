@@ -157,7 +157,7 @@ namespace triton {
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
-        //this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
         /* Clean implicit and explicit semantics - MEM */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.getLoadAccess());
@@ -195,7 +195,7 @@ namespace triton {
       //if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
       if (inst.symbolicExpressions.size() == 0) {
         /* Memory operands */
-        //this->collectUntaintedNodes(uniqueNodes, inst.operands);
+        this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
         /* Implicit and explicit semantics - MEM */
         this->collectUntaintedNodes(uniqueNodes, inst.getLoadAccess());
@@ -240,14 +240,14 @@ namespace triton {
     }
 
 
-    //void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
-    //  for (auto it = operands.begin(); it != operands.end(); it++) {
-    //    if (it->getType() == triton::arch::OP_MEM) {
-    //      this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-    //      it->getMemory().setLeaAst(nullptr);
-    //    }
-    //  }
-    //}
+    void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
+      for (auto it = operands.begin(); it != operands.end(); it++) {
+        if (it->getType() == triton::arch::OP_MEM) {
+          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+          it->getMemory().setLeaAst(nullptr);
+        }
+      }
+    }
 
 
     template <class T>
@@ -281,16 +281,16 @@ namespace triton {
     //}
 
 
-    //void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
-    //  for (auto it = operands.begin(); it!= operands.end(); it++) {
-    //    if (it->getType() == triton::arch::OP_MEM) {
-    //      if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-    //        this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-    //        it->getMemory().setLeaAst(nullptr);
-    //      }
-    //    }
-    //  }
-    //}
+    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
+      for (auto it = operands.begin(); it!= operands.end(); it++) {
+        if (it->getType() == triton::arch::OP_MEM) {
+          if (it->getMemory().getLeaAst()->isSymbolized() == false) {
+            //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+            it->getMemory().setLeaAst(nullptr);
+          }
+        }
+      }
+    }
 
   }; /* arch namespace */
 }; /* triton namespace */

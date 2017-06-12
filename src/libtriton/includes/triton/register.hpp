@@ -83,10 +83,13 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! Compare two registers specifications
-        bool operator==(const RegisterSpec& r) const;
+        bool operator==(const RegisterSpec& other) const;
 
         //! Compare two registers specifications
-        bool operator!=(const RegisterSpec& r) const;
+        bool operator!=(const RegisterSpec& other) const;
+
+        //! Copies a RegisterSpec.
+        void operator=(const RegisterSpec& other);
     };
 
     /*! \class Register
@@ -126,11 +129,14 @@ namespace triton {
         //! Sets the concrete value of the register.
         void setConcreteValue(triton::uint512 concreteValue);
 
-        //! Compare two registers
-        bool operator==(const Register& reg) const;
+        //! Compare two Register
+        bool operator==(const Register& other) const;
 
-        //! Compare two registers
-        bool operator!=(const Register& reg) const;
+        //! Compare two Register
+        bool operator!=(const Register& other) const;
+
+        //! Copies a Register.
+        void operator=(const Register& other);
     };
 
     //! Displays a Register.

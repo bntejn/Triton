@@ -408,6 +408,7 @@ namespace triton {
     this->modes = triton::modes::Modes();
 
     // Clean up the ast context
+    this->freeAllAstNodes();
     this->astCtxt = triton::ast::AstContext{this->modes};
   }
 
