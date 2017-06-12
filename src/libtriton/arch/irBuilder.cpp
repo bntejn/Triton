@@ -193,7 +193,7 @@ namespace triton {
        * and implicit/explicit semantics AST to avoid memory leak.
        */
       //if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
-      if (inst.symbolicExpressions.size() == 0) {
+      else if (inst.symbolicExpressions.size() == 0) {
         /* Memory operands */
         this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
@@ -285,8 +285,8 @@ namespace triton {
       for (auto it = operands.begin(); it!= operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
           if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-            //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-            //it->getMemory().setLeaAst(nullptr);
+            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+            it->getMemory().setLeaAst(nullptr);
           }
         }
       }
