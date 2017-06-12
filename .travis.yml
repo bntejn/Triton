@@ -107,6 +107,12 @@ matrix:
           compiler: clang
           env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
+        # OSX xcode 8.2 with ASAN
+        - os: osx
+          osx_image: xcode8.2
+          compiler: clang
+          env: [ ASAN=on, CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib -DASAN=on' ]
+
 notifications:
   email: false
 
@@ -165,7 +171,7 @@ script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake $TT_PYTHON_ENV ..; fi
   - sudo make -j2
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
-  - make check
+  - if [ "$ASAN" == "ON" ]; then ASAN_OPTIONS=detect_leaks=0 LD_PRELOAD=`locate libclang_rt.asan-x86_64.so | head -n 1` make check; else make check; fi
   # Check installation succeed
   - sudo make install
 
