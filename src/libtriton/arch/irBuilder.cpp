@@ -61,17 +61,23 @@ namespace triton {
       if (this->architecture->getArchitecture() == triton::arch::ARCH_INVALID)
         throw triton::exceptions::IrBuilder("IrBuilder::buildSemantics(): You must define an architecture.");
 
+      std::cout << 100 << std::endl;
+
       /* Stage 1 - Update the context memory */
       std::list<triton::arch::MemoryAccess>::iterator it1;
       for (it1 = inst.memoryAccess.begin(); it1 != inst.memoryAccess.end(); it1++) {
         this->architecture->setConcreteMemoryValue(*it1);
       }
 
+      std::cout << 101 << std::endl;
+
       /* Stage 2 - Update the context register */
       std::map<triton::uint32, triton::arch::Register>::iterator it2;
       for (it2 = inst.registerState.begin(); it2 != inst.registerState.end(); it2++) {
         this->architecture->setConcreteRegisterValue(it2->second);
       }
+
+      std::cout << 102 << std::endl;
 
       /* Stage 3 - Initialize the target address of memory operands */
       std::vector<triton::arch::OperandWrapper>::iterator it3;
@@ -80,9 +86,12 @@ namespace triton {
           this->symbolicEngine->initLeaAst(it3->getMemory());
         }
       }
+      std::cout << 103 << std::endl;
 
       /* Pre IR processing */
       this->preIrInit(inst);
+
+      std::cout << 104 << std::endl;
 
       /* Processing */
       switch (this->architecture->getArchitecture()) {
@@ -90,9 +99,12 @@ namespace triton {
         case triton::arch::ARCH_X86_64:
           ret = this->x86Isa->buildSemantics(inst);
       }
+      std::cout << 105 << std::endl;
 
       /* Post IR processing */
       this->postIrInit(inst);
+
+      std::cout << 106 << std::endl;
 
       return ret;
     }
@@ -106,16 +118,19 @@ namespace triton {
       inst.readImmediates.clear();
       inst.storeAccess.clear();
       inst.writtenRegisters.clear();
+      std::cout << 1000 << std::endl;
 
       /* Update instruction address if undefined */
       if (!inst.getAddress())
         inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getParentRegister(ID_REG_IP)).convert_to<triton::uint64>());
+      std::cout << 1001 << std::endl;
 
       /* Backup the symbolic engine in the case where only the taint is available. */
       if (!this->symbolicEngine->isEnabled()) {
         *this->backupSymbolicEngine = *this->symbolicEngine;
         this->backupAstGarbageCollector = this->astGarbageCollector;
       }
+      std::cout << 1002 << std::endl;
     }
 
 
@@ -123,12 +138,15 @@ namespace triton {
       std::set<triton::ast::AbstractNode*> uniqueNodes;
       std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
 
+      std::cout << 10000 << std::endl;
       /* Clear unused data */
       inst.memoryAccess.clear();
       inst.registerState.clear();
+      std::cout << 10001 << std::endl;
 
       /* Set the taint */
       inst.setTaint();
+      std::cout << 10002 << std::endl;
 
       // ----------------------------------------------------------------------
 
@@ -141,6 +159,7 @@ namespace triton {
         this->removeSymbolicExpressions(inst, uniqueNodes);
         *this->symbolicEngine = *this->backupSymbolicEngine;
       }
+      std::cout << 10003 << std::endl;
 
       // ----------------------------------------------------------------------
 
@@ -152,6 +171,7 @@ namespace triton {
       if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
         this->removeSymbolicExpressions(inst, uniqueNodes);
       }
+      std::cout << 10004 << std::endl;
 
       // ----------------------------------------------------------------------
 
@@ -163,21 +183,27 @@ namespace triton {
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
+        std::cout << 10005 << std::endl;
 
         /* Clean implicit and explicit semantics - MEM */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.loadAccess);
+        std::cout << 10006 << std::endl;
 
         ///* Clean implicit and explicit semantics - REG */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.readRegisters);
+        std::cout << 10007 << std::endl;
 
         ///* Clean implicit and explicit semantics - IMM */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.readImmediates);
+        std::cout << 10008 << std::endl;
 
         ///* Clean implicit and explicit semantics - MEM */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.storeAccess);
+        std::cout << 10009 << std::endl;
 
         ///* Clean implicit and explicit semantics - REG */
         this->collectUnsymbolizedNodes(uniqueNodes, inst.writtenRegisters);
+        std::cout << 10010 << std::endl;
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.cbegin(); it != inst.symbolicExpressions.cend(); it++) {
@@ -188,6 +214,7 @@ namespace triton {
           else
             newVector.push_back(*it);
         }
+        std::cout << 10011 << std::endl;
         inst.symbolicExpressions = newVector;
       }
 
@@ -201,30 +228,39 @@ namespace triton {
       else if (inst.symbolicExpressions.size() == 0) {
         /* Memory operands */
         this->collectUntaintedNodes(uniqueNodes, inst.operands);
+        std::cout << 10012 << std::endl;
 
         /* Implicit and explicit semantics - MEM */
         this->collectUntaintedNodes(uniqueNodes, inst.loadAccess);
+        std::cout << 10013 << std::endl;
 
         /* Implicit and explicit semantics - REG */
         this->collectUntaintedNodes(uniqueNodes, inst.readRegisters);
+        std::cout << 10014 << std::endl;
 
         /* Implicit and explicit semantics - IMM */
         this->collectUntaintedNodes(uniqueNodes, inst.readImmediates);
+        std::cout << 10015 << std::endl;
 
         /* Implicit and explicit semantics - MEM */
         this->collectUntaintedNodes(uniqueNodes, inst.storeAccess);
+        std::cout << 10016 << std::endl;
 
         /* Implicit and explicit semantics - REG */
         this->collectUntaintedNodes(uniqueNodes, inst.writtenRegisters);
+        std::cout << 10017 << std::endl;
       }
 
       //// ----------------------------------------------------------------------
 
       ///* Free collected nodes */
       this->astGarbageCollector.freeAstNodes(uniqueNodes);
+        std::cout << 10018 << std::endl;
+      }
 
       if (!this->symbolicEngine->isEnabled())
         this->astGarbageCollector = this->backupAstGarbageCollector;
+      std::cout << 10019 << std::endl;
     }
 
 
