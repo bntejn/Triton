@@ -873,7 +873,7 @@ namespace triton {
           /* Synchronize the concrete state */
           this->architecture->setConcreteMemoryValue(mem);
           /* Define the memory store */
-          inst.setStoreAccess(mem, node);
+          inst.setStoreAccess(mem, tmp);
           return se;
         }
 
@@ -890,7 +890,7 @@ namespace triton {
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize(), tmp->evaluate()));
 
         /* Define the memory store */
-        inst.setStoreAccess(mem, node);
+        inst.setStoreAccess(mem, tmp);
         inst.addSymbolicExpression(se);
         return se;
       }
