@@ -243,7 +243,7 @@ namespace triton {
     void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
       for (auto it = operands.begin(); it != operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
-          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+          //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
           it->getMemory().setLeaAst(nullptr);
         }
       }
@@ -267,7 +267,7 @@ namespace triton {
       for (auto it = operands.begin(); it!= operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
           if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+            //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
             it->getMemory().setLeaAst(nullptr);
           }
         }
