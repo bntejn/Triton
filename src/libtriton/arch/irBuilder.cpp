@@ -255,8 +255,7 @@ namespace triton {
 
       ///* Free collected nodes */
       this->astGarbageCollector.freeAstNodes(uniqueNodes);
-        std::cout << 10018 << std::endl;
-      }
+      std::cout << 10018 << std::endl;
 
       if (!this->symbolicEngine->isEnabled())
         this->astGarbageCollector = this->backupAstGarbageCollector;
