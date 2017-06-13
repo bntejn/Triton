@@ -14,30 +14,46 @@ class TestOnlySymbolizedMode(unittest.TestCase):
 
     def test_1(self):
         ctx = TritonContext()
+        print 1
         ctx.setArchitecture(ARCH.X86_64)
+        print 2
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, False)
+        print 3
 
         inst = Instruction("\x48\x89\xc3") # mov rbx, rax
+        print 4
         ctx.processing(inst)
+        print 5
 
         self.assertEqual(len(inst.getReadRegisters()), 1)
+        print 6
         self.assertEqual(len(inst.getWrittenRegisters()), 2)
+        print 7
 
         try:
             str(inst.getReadRegisters()[0][1])
+            print 8
             str(inst.getWrittenRegisters()[0][1])
+            print 9
             str(inst.getWrittenRegisters()[1][1])
+            print 10
         except:
             self.fail("test_1() raised unexpectedly!")
 
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        print 11
 
         ctx.processing(inst)
+        print 12
 
         self.assertEqual(len(inst.getReadRegisters()), 0)
+        print 13
         self.assertEqual(len(inst.getWrittenRegisters()), 0)
+        print 14
         self.assertEqual(len(inst.getLoadAccess()), 0)
+        print 15
         self.assertEqual(len(inst.getStoreAccess()), 0)
+        print 16
 
     def test_2(self):
         ctx = TritonContext()
