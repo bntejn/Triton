@@ -101,6 +101,11 @@ namespace triton {
     void IrBuilder::preIrInit(triton::arch::Instruction& inst) {
       /* Clear previous expressions if exist */
       inst.symbolicExpressions.clear();
+      inst.loadAccess.clear();
+      inst.readRegisters.clear();
+      inst.readImmediates.clear();
+      inst.storeAccess.clear();
+      inst.writtenRegisters.clear();
 
       /* Update instruction address if undefined */
       if (!inst.getAddress())
