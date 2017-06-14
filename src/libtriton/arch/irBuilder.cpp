@@ -266,9 +266,44 @@ namespace triton {
     //  items = newItems;
     //}
 
-    template <typename T>
-    void IrBuilder::collectUnsymbolizedNodes(T& items) const {
-      T newItems;
+    //template <typename T>
+    //void IrBuilder::collectUnsymbolizedNodes(T& items) const {
+    //  T newItems;
+
+    //  for (auto it = items.cbegin(); it != items.cend(); it++) {
+    //    if (std::get<1>(*it) && std::get<1>(*it)->isSymbolized() == true)
+    //      newItems.insert(*it);
+    //  }
+
+    //  items = std::move(newItems);
+    //}
+
+    void IrBuilder::collectUnsymbolizedNodes(std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& items) const {
+      std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>> newItems;
+
+      for (auto it = items.cbegin(); it != items.cend(); it++) {
+        if (std::get<1>(*it) && std::get<1>(*it)->isSymbolized() == true)
+          newItems.insert(*it);
+      }
+
+      items = std::move(newItems);
+    }
+
+
+    void IrBuilder::collectUnsymbolizedNodes(std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& items) const {
+      std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> newItems;
+
+      for (auto it = items.cbegin(); it != items.cend(); it++) {
+        if (std::get<1>(*it) && std::get<1>(*it)->isSymbolized() == true)
+          newItems.insert(*it);
+      }
+
+      items = std::move(newItems);
+    }
+
+
+    void IrBuilder::collectUnsymbolizedNodes(std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& items) const {
+      std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> newItems;
 
       for (auto it = items.cbegin(); it != items.cend(); it++) {
         if (std::get<1>(*it) && std::get<1>(*it)->isSymbolized() == true)
