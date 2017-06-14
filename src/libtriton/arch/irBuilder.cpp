@@ -165,19 +165,19 @@ namespace triton {
         this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
         /* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.loadAccess);
+        this->collectUnsymbolizedNodes(inst.loadAccess);
 
-        ///* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.readRegisters);
+        /* Clean implicit and explicit semantics - REG */
+        this->collectUnsymbolizedNodes(inst.readRegisters);
 
-        ///* Clean implicit and explicit semantics - IMM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.readImmediates);
+        /* Clean implicit and explicit semantics - IMM */
+        this->collectUnsymbolizedNodes(inst.readImmediates);
 
-        ///* Clean implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.storeAccess);
+        /* Clean implicit and explicit semantics - MEM */
+        this->collectUnsymbolizedNodes(inst.storeAccess);
 
-        ///* Clean implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(uniqueNodes, inst.writtenRegisters);
+        /* Clean implicit and explicit semantics - REG */
+        this->collectUnsymbolizedNodes(inst.writtenRegisters);
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.cbegin(); it != inst.symbolicExpressions.cend(); it++) {
@@ -191,7 +191,7 @@ namespace triton {
         inst.symbolicExpressions = newVector;
       }
 
-      //// ----------------------------------------------------------------------
+      // ----------------------------------------------------------------------
 
       /*
        * If there is no symbolic expression, clean memory operands AST
@@ -218,9 +218,9 @@ namespace triton {
         this->collectUntaintedNodes(uniqueNodes, inst.writtenRegisters);
       }
 
-      //// ----------------------------------------------------------------------
+      // ----------------------------------------------------------------------
 
-      ///* Free collected nodes */
+      /* Free collected nodes */
       this->astGarbageCollector.freeAstNodes(uniqueNodes);
 
       if (!this->symbolicEngine->isEnabled())
@@ -255,8 +255,20 @@ namespace triton {
     }
 
 
+    //template <typename T>
+    //void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
+    //  T newItems;
+
+    //  for (auto it = items.cbegin(); it != items.cend(); it++) {
+    //    if (std::get<1>(*it)->isSymbolized() == true)
+    //      newItems.insert(*it);
+    //  }
+
+    //  items = newItems;
+    //}
+
     template <typename T>
-    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
+    void IrBuilder::collectUnsymbolizedNodes(T& items) const {
       T newItems;
 
       for (auto it = items.cbegin(); it != items.cend(); it++) {
