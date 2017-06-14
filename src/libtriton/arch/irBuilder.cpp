@@ -197,8 +197,7 @@ namespace triton {
        * If there is no symbolic expression, clean memory operands AST
        * and implicit/explicit semantics AST to avoid memory leak.
        */
-      //if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
-      else if (inst.symbolicExpressions.size() == 0) {
+      else if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
         /* Memory operands */
         this->collectUntaintedNodes(uniqueNodes, inst.operands);
 
