@@ -188,7 +188,7 @@ namespace triton {
           else
             newVector.push_back(*it);
         }
-        inst.symbolicExpressions = newVector;
+        inst.symbolicExpressions = std::move(newVector);
       }
 
       // ----------------------------------------------------------------------
@@ -276,7 +276,7 @@ namespace triton {
           newItems.insert(*it);
       }
 
-      items = newItems;
+      items = std::move(newItems);
     }
 
 
