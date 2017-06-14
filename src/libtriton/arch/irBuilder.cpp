@@ -272,7 +272,7 @@ namespace triton {
       T newItems;
 
       for (auto it = items.cbegin(); it != items.cend(); it++) {
-        if (std::get<1>(*it)->isSymbolized() == true)
+        if (std::get<1>(*it) && std::get<1>(*it)->isSymbolized() == true)
           newItems.insert(*it);
       }
 
@@ -283,7 +283,7 @@ namespace triton {
     void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
       for (auto it = operands.begin(); it!= operands.end(); it++) {
         if (it->getType() == triton::arch::OP_MEM) {
-          if (it->getMemory().getLeaAst()->isSymbolized() == false) {
+          if (it->getMemory().getLeaAst() && it->getMemory().getLeaAst()->isSymbolized() == false) {
             //this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
             it->getMemory().setLeaAst(nullptr);
           }
