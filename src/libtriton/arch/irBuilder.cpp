@@ -265,6 +265,7 @@ namespace triton {
       }
       std::cout << 2 << std::endl;
 
+      items.clear();
       items = std::move(newItems);
       std::cout << 3 << std::endl;
     }
