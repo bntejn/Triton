@@ -79,7 +79,7 @@ namespace triton {
           this->variableNodes.erase(reinterpret_cast<triton::ast::VariableNode*>(*it)->getVar().getName());
 
         /* Clean childs */
-        it->getChilds().clear();
+        (*it)->getChilds().clear();
 
         /* Delete the node */
         delete *it;
