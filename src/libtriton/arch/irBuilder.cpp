@@ -182,7 +182,8 @@ namespace triton {
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.cbegin(); it != inst.symbolicExpressions.cend(); it++) {
           if ((*it)->isSymbolized() == false) {
-            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+            if ((*it)->getAst()->getParents().size() == 0)
+              this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
             this->symbolicEngine->removeSymbolicExpression((*it)->getId());
           }
           else
@@ -229,7 +230,9 @@ namespace triton {
 
     void IrBuilder::removeSymbolicExpressions(triton::arch::Instruction& inst, std::set<triton::ast::AbstractNode*>& uniqueNodes) {
       for (auto it = inst.symbolicExpressions.cbegin(); it != inst.symbolicExpressions.cend(); it++) {
-        this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+        if ((*it)->getAst()->getParents().size() == 0) {
+          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+        }
         this->symbolicEngine->removeSymbolicExpression((*it)->getId());
       }
       inst.symbolicExpressions.clear();
@@ -238,8 +241,11 @@ namespace triton {
 
     template <typename T>
     void IrBuilder::collectUntaintedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
-      for (auto it = items.cbegin(); it != items.cend(); it++)
-        this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+      for (auto it = items.cbegin(); it != items.cend(); it++) {
+        if (std::get<1>(*it)->getParents().size() == 0) {
+          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+        }
+      }
       items.clear();
     }
 
