@@ -55,6 +55,9 @@ namespace triton {
         //! Constructor.
         RegisterSpec(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
 
+        //! Constructor.
+        RegisterSpec(const RegisterSpec& other);
+
         //! Returns the parent id of the register.
         registers_e getParent(void) const;
 
@@ -109,16 +112,19 @@ namespace triton {
         Register();
 
         //! Constructor.
-        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
+        Register(const Register& spec);
 
         //! Constructor.
-        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId, triton::uint512 concreteValue);
+        Register(const RegisterSpec& spec);
 
         //! Constructor.
         Register(const RegisterSpec& spec, triton::uint512 concreteValue);
 
         //! Constructor.
-        explicit Register(const RegisterSpec& spec);
+        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
+
+        //! Constructor.
+        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId, triton::uint512 concreteValue);
 
         //! Returns true if the register contains a concrete value.
         bool hasConcreteValue(void) const;
