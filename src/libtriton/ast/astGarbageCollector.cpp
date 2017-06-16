@@ -78,6 +78,9 @@ namespace triton {
         if ((*it)->getKind() == triton::ast::VARIABLE_NODE)
           this->variableNodes.erase(reinterpret_cast<triton::ast::VariableNode*>(*it)->getVar().getName());
 
+        /* Clean childs */
+        it->getChilds().clear();
+
         /* Delete the node */
         delete *it;
       }
