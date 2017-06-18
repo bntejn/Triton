@@ -204,14 +204,14 @@ namespace triton {
         /* Implicit and explicit semantics - MEM */
         this->collectUntaintedNodes(uniqueNodes, inst.loadAccess);
 
-        /* Implicit and explicit semantics - REG */
-        this->collectUntaintedNodes(uniqueNodes, inst.readRegisters);
+        /* Implicit and explicit semantics - MEM */
+        this->collectUntaintedNodes(uniqueNodes, inst.storeAccess);
 
         /* Implicit and explicit semantics - IMM */
         this->collectUntaintedNodes(uniqueNodes, inst.readImmediates);
 
-        /* Implicit and explicit semantics - MEM */
-        this->collectUntaintedNodes(uniqueNodes, inst.storeAccess);
+        /* Implicit and explicit semantics - REG */
+        this->collectUntaintedNodes(uniqueNodes, inst.readRegisters);
 
         /* Implicit and explicit semantics - REG */
         this->collectUntaintedNodes(uniqueNodes, inst.writtenRegisters);
