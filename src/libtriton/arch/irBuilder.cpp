@@ -258,14 +258,14 @@ namespace triton {
     void IrBuilder::collectUnsymbolizedNodes(T& items) const {
       T newItems;
 
-      std::cout << 1 << std::endl;
+      newItems.clear();
       for (auto it = items.cbegin(); it != items.cend(); it++) {
         if (std::get<1>(*it) && std::get<1>(*it)->isSymbolized() == true)
           newItems.insert(*it);
       }
-      std::cout << 2 << std::endl;
 
       items.clear();
+      std::cout << 2 << std::endl;
       items = std::move(newItems);
       std::cout << 3 << std::endl;
     }
