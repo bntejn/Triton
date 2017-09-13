@@ -552,4 +552,30 @@ class TestTaint(unittest.TestCase):
         Triton.setTaintRegister(Triton.registers.rax, False)
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
+    def test_taint_program_counter(self):
+        Triton = TritonContext()
+        Triton.setArchitecture(ARCH.X86_64)
+
+        tag1 = Tag('mydata1')
+        tag2 = Tag('mydata2')
+        Triton.taintMemory(MemoryAccess(0x1000, 4), tag1)
+        self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x1000, 4)))
+        tags = Triton.getTagsOnMemory(MemoryAccess(0x1000, 4))
+        self.assertTrue(len(tags) == 1 and tags[0].getData() == 'mydata1')
+
+        Triton.taintProgramCounter(tag2)
+        tags = Triton.getTagsOnMemory(MemoryAccess(0x1000, 4))
+        self.assertTrue(len(tags) == 1 and tags[0].getData() == 'mydata1')
+        Triton.taintAssignmentMemoryImmediate(MemoryAccess(0x1000, 4))
+        tags = Triton.getTagsOnMemory(MemoryAccess(0x1000, 4))
+        data_on_tags = [t.getData() for t in tags]
+        self.assertTrue('mydata1' in data_on_tags and 'mydata2' in data_on_tags)
+
+        Triton.untaintProgramCounter(tag2)
+        Triton.taintMemory(MemoryAccess(0x2000, 4), tag1)
+        self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
+        self.assertTrue(len(Triton.getTagsOnMemory(MemoryAccess(0x2000, 4))) == 1)
+        Triton.taintUnionRegisterMemory(Triton.registers.rax, MemoryAccess(0x2000, 4))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertTrue(len(Triton.getTagsOnRegister(Triton.registers.rax)) == 1)
 

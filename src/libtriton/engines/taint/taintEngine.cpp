@@ -616,16 +616,21 @@ namespace triton {
 
       /* reg <- reg  */
       bool TaintEngine::assignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
+        bool isTainted = !TAINTED;
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
+        this->untaintRegister(regDst);
+
         if (this->isRegisterTainted(regSrc)) {
           this->taintRegister(regDst, this->getTags(regSrc));
-          return TAINTED;
+          isTainted = TAINTED;
         }
-
-        this->untaintRegister(regDst);
-        return !TAINTED;
+        if (this->isProgramCounterTainted()) {
+          this->taintRegister(regDst, this->tagsOnProgramCounter);
+          isTainted = TAINTED;
+        }
+        return isTainted;
       }
 
 
@@ -633,23 +638,34 @@ namespace triton {
       bool TaintEngine::assignmentRegisterImmediate(const triton::arch::Register& regDst) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
+
         this->untaintRegister(regDst);
+
+        if (this->isProgramCounterTainted()) {
+          this->taintRegister(regDst, this->tagsOnProgramCounter);
+          return TAINTED;
+        }
         return !TAINTED;
       }
 
 
       /* reg <- mem */
       bool TaintEngine::assignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
+        bool isTainted = !TAINTED;
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
+        this->untaintRegister(regDst);
+
         if (this->isMemoryTainted(memSrc)) {
           this->taintRegister(regDst, this->getTags(memSrc));
-          return TAINTED;
+          isTainted = TAINTED;
         }
-
-        this->untaintRegister(regDst);
-        return !TAINTED;
+        if (this->isProgramCounterTainted()) {
+          this->taintRegister(regDst, this->tagsOnProgramCounter);
+          isTainted = TAINTED;
+        }
+        return isTainted;
       }
 
 
@@ -663,15 +679,16 @@ namespace triton {
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
 
-        if (this->isMemoryTainted(memDst))
-          this->deleteTags(memDst);    // untag first, to overwrite tags
         for (triton::uint32 offset = 0; offset < readSize; offset++) {
+          this->untaintMemory(addrDst+offset);  // untaint the destination first, to overwrite.
           if (this->isMemoryTainted(addrSrc+offset)) {
             this->taintMemory(addrDst+offset, this->getTags(addrSrc+offset, 1));
             isTainted = TAINTED;
           }
-          else
-            this->untaintMemory(addrDst+offset);
+          if (this->isProgramCounterTainted()) {
+            this->taintMemory(addrDst+offset, this->tagsOnProgramCounter);
+            isTainted = TAINTED;
+          }
         }
 
         return isTainted;
@@ -680,35 +697,47 @@ namespace triton {
 
       /* mem <- imm  */
       bool TaintEngine::assignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
+        bool isTainted = !TAINTED;
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
+
         this->untaintMemory(memDst);
-        return !TAINTED;
+
+        if (this->isProgramCounterTainted()) {
+          this->taintMemory(memDst, this->tagsOnProgramCounter);
+          isTainted = TAINTED;
+        }
+        return isTainted;
       }
 
 
       /* mem <- reg  */
       bool TaintEngine::assignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
+        bool isTainted = !TAINTED;
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
 
+        this->untaintMemory(memDst);
+
         /* Check source */
         if (this->isRegisterTainted(regSrc)) {
-          this->deleteTags(memDst);    // untag first, to overwrite tags
           this->taintMemory(memDst, this->getTags(regSrc));
-          return TAINTED;
+          isTainted = TAINTED;
         }
-
-        /* Spread destination */
-        this->untaintMemory(memDst);
-        return !TAINTED;
+        if (this->isProgramCounterTainted()) {
+          this->taintMemory(memDst, this->tagsOnProgramCounter);
+          isTainted = TAINTED;
+        }
+        return isTainted;
       }
-
 
       /* reg U imm */
       bool TaintEngine::unionRegisterImmediate(const triton::arch::Register& regDst) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
+        if (this->isProgramCounterTainted()) {
+          this->taintRegister(regDst, this->tagsOnProgramCounter);
+        }
         return this->isRegisterTainted(regDst);
       }
 
@@ -720,7 +749,9 @@ namespace triton {
 
         if (this->isRegisterTainted(regSrc)) {
           this->taintRegister(regDst, this->getTags(regSrc));
-          return TAINTED;
+        }
+        if (this->isProgramCounterTainted()) {
+          this->taintRegister(regDst, this->tagsOnProgramCounter);
         }
 
         return this->isRegisterTainted(regDst);
@@ -743,13 +774,16 @@ namespace triton {
             this->taintMemory(addrDst+offset, this->getTags(addrSrc+offset, 1));
             tainted = TAINTED;
           }
+          if (this->isProgramCounterTainted()) {
+            this->taintMemory(addrDst+offset, this->tagsOnProgramCounter);
+            tainted = TAINTED;
+          }
         }
 
         /* Check destination */
         if (this->isMemoryTainted(memDst)) {
           return TAINTED;
         }
-
         return tainted;
       }
 
@@ -761,7 +795,9 @@ namespace triton {
 
         if (this->isMemoryTainted(memSrc)) {
           this->taintRegister(regDst, this->getTags(memSrc));
-          return TAINTED;
+        }
+        if (this->isProgramCounterTainted()) {
+          this->taintRegister(regDst, this->tagsOnProgramCounter);
         }
 
         return this->isRegisterTainted(regDst);
@@ -774,10 +810,12 @@ namespace triton {
           return this->isMemoryTainted(memDst);
 
         if (this->isMemoryTainted(memDst)) {
-          return TAINTED;
+        }
+        if (this->isProgramCounterTainted()) {
+          this->taintMemory(memDst, this->tagsOnProgramCounter);
         }
 
-        return !TAINTED;
+        return this->isMemoryTainted(memDst);
       }
 
 
@@ -788,12 +826,13 @@ namespace triton {
 
         if (this->isRegisterTainted(regSrc)) {
           this->taintMemory(memDst, this->getTags(regSrc));
-          return TAINTED;
+        }
+        if (this->isProgramCounterTainted()) {
+          this->taintMemory(memDst, this->tagsOnProgramCounter);
         }
 
         if (this->isMemoryTainted(memDst))
           return TAINTED;
-
         return !TAINTED;
       }
 
@@ -850,10 +889,20 @@ namespace triton {
 
       void TaintEngine::deleteTags(const triton::uint64 addr, const triton::uint32 size) {
         if (!this->isTagged(addr, size))
-            return;
+          return;
         for (triton::uint32 offset = 0; offset < size; offset++) {
           this->memoryTagMap[addr+offset].clear();
         }
+      }
+
+      bool TaintEngine::taintProgramCounter(Tag tag) {
+        this->tagsOnProgramCounter.insert(tag);
+        return this->isProgramCounterTainted();
+      }
+
+      bool TaintEngine::untaintProgramCounter(const Tag& tag) {
+        /* std::set::erase returns the number of items removed from the set */
+        return this->tagsOnProgramCounter.erase(tag) == 1;
       }
 
     }; /* taint namespace */

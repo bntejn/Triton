@@ -1224,5 +1224,12 @@ namespace triton {
     return this->taint->getTags(mem);
   }
 
+  bool API::taintProgramCounter(triton::engines::taint::Tag tag) {
+    return this->taint->taintProgramCounter(tag);
+  }
+
+  bool API::untaintProgramCounter(const triton::engines::taint::Tag& tag) {
+    return this->taint->untaintProgramCounter(tag);
+  }
 
 }; /* triton namespace */

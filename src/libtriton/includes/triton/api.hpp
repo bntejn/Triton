@@ -592,7 +592,7 @@ namespace triton {
         //! [**taint api**] - Taints an address. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
         bool taintMemory(triton::uint64 addr);
 
-      //! [**taint api**] - Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
+        //! [**taint api**] - Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
         bool taintMemory(const triton::arch::MemoryAccess& mem);
 
         //! [**taint api**] - Taints a memory with a tag. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
@@ -662,6 +662,12 @@ namespace triton {
 
         //! [**taint api**] - Retrieve the tags assigned to a MemoryAccess
         std::set<triton::engines::taint::Tag> getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem);
+
+        //! [**taint api**] - Taint the program counter with a Tag
+        bool taintProgramCounter(triton::engines::taint::Tag tag);
+
+        //! [**taint api**] - Untaint the program counter with a Tag
+        bool untaintProgramCounter(const triton::engines::taint::Tag& tag);
 
     };
 

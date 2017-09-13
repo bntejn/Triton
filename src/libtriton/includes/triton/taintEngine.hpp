@@ -79,6 +79,9 @@ namespace triton {
           //! The map of register to tags
           std::map<triton::uint32, std::set<Tag>> registerTagMap;
 
+          //! A set of tags tainted on the program counter
+          std::set<Tag> tagsOnProgramCounter;
+
           //! Copies a TaintEngine.
           void copy(const TaintEngine& other);
 
@@ -131,7 +134,7 @@ namespace triton {
           //! Taints an address and assign tags. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
           bool taintMemory(triton::uint64 addr, std::set<Tag> tags);
 
-        //! Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
+          //! Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
           bool taintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Taints a memory and assign tags. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
@@ -212,8 +215,19 @@ namespace triton {
           //! Check if a register is tagged.
           bool isTagged(const triton::arch::Register& reg);
 
-        //! Check if a memory address is tagged.
+          //! Check if a memory address is tagged.
           bool isTagged(const triton::uint64 addr, const triton::uint32 size);
+
+          //! Taint the program counter with a tag
+          bool taintProgramCounter(Tag tag);
+
+          //! Remove one tag tainted on the program counter
+          bool untaintProgramCounter(const Tag& tag);
+
+          //! Returns true if the program counter is tainted
+          inline bool isProgramCounterTainted() {
+            return this->tagsOnProgramCounter.size() > 0;
+          }
 
         private:
           //! Spreads MemoryImmediate with union.

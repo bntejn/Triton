@@ -379,6 +379,9 @@ Taints a register. Returns true if the register is tainted.
 - <b>bool taintAndTagRegister(\ref py_Register_page reg, \ref py_Tag_page tag)</b><br>
 Taints a register with a tag. Returns true if the register is tainted successfully.
 
+- <b>bool taintProgramCounter(\ref py_Tag_page tag)</b><br>
+Taints the program counter with a tag. Returns true if the PC is tainted successfully.
+
 - <b>bool taintUnionMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
 Taints `memDst` with an union - `memDst` does not changes. Returns true if `memDst` is tainted.
 
@@ -418,6 +421,9 @@ Untaints a memory. Returns true if the memory is still tainted.
 
 - <b>bool untaintRegister(\ref py_Register_page reg)</b><br>
 Untaints a register. Returns true if the register is still tainted.
+
+- <b>bool untaintProgramCounter(\ref py_Tag_page tag)</b><br>
+Untaint a tag from the program counter. Returns true if the tag is removed successfully.
 
 */
 
@@ -2766,7 +2772,6 @@ namespace triton {
         }
       }
 
-      // TODO: in progress
       static PyObject* TritonContext_taintAndTagRegister(PyObject* self, PyObject* args) {
         PyObject* reg = nullptr;
         PyObject* tag = nullptr;
@@ -2792,6 +2797,23 @@ namespace triton {
         }
       }
 
+      static PyObject* TritonContext_taintProgramCounter(PyObject* self, PyObject* tag) {
+        /* Check if the architecture is defined */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "taintProgramCounter(): Architecture is not defined.");
+
+        if (!PyTag_Check(tag))
+          return PyErr_Format(PyExc_TypeError, "taintProgramCounter(): Expects a Tag as an argument.");
+
+        try {
+          if (PyTritonContext_AsTritonContext(self)->taintProgramCounter(*PyTag_AsTag(tag)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
 
       static PyObject* TritonContext_taintUnionMemoryImmediate(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
@@ -3056,6 +3078,25 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_untaintProgramCounter(PyObject* self, PyObject* tag) {
+        /* Check if the architecture is defined */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "untaintProgramCounter(): Architecture is not defined.");
+
+        if (!PyTag_Check(tag))
+          return PyErr_Format(PyExc_TypeError, "untaintProgramCounter(): Expects a Tag as an argument.");
+
+        try {
+          if (PyTritonContext_AsTritonContext(self)->untaintProgramCounter(*PyTag_AsTag(tag)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* TritonContext_getParentRegister(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
@@ -3198,6 +3239,7 @@ namespace triton {
         {"taintAndTagMemory",                   (PyCFunction)TritonContext_taintAndTagMemory,                      METH_VARARGS,       ""},
         {"taintRegister",                       (PyCFunction)TritonContext_taintRegister,                          METH_O,             ""},
         {"taintAndTagRegister",                 (PyCFunction)TritonContext_taintAndTagRegister,                    METH_VARARGS,       ""},
+        {"taintProgramCounter",                 (PyCFunction)TritonContext_taintProgramCounter,                    METH_O,             ""},
         {"taintUnionMemoryImmediate",           (PyCFunction)TritonContext_taintUnionMemoryImmediate,              METH_O,             ""},
         {"taintUnionMemoryMemory",              (PyCFunction)TritonContext_taintUnionMemoryMemory,                 METH_VARARGS,       ""},
         {"taintUnionMemoryRegister",            (PyCFunction)TritonContext_taintUnionMemoryRegister,               METH_VARARGS,       ""},
@@ -3209,6 +3251,7 @@ namespace triton {
         {"unrollAstFromId",                     (PyCFunction)TritonContext_unrollAstFromId,                        METH_O,             ""},
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                        METH_O,             ""},
+        {"untaintProgramCounter",               (PyCFunction)TritonContext_untaintProgramCounter,                  METH_O,             ""},
         {nullptr,                               nullptr,                                                           0,                  nullptr}
       };
 
