@@ -620,16 +620,21 @@ namespace triton {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
-        this->untaintRegister(regDst);
-
         if (this->isRegisterTainted(regSrc)) {
-          this->taintRegister(regDst, this->getTags(regSrc));
+          /* retrieve the tags first, in case regDst == regSrc */
+          auto tags = this->getTags(regSrc);
+          this->deleteTags(regDst);
+          this->taintRegister(regDst, tags);
           isTainted = TAINTED;
+        } else {
+          this->untaintRegister(regDst);
+          isTainted = !TAINTED;
         }
         if (this->isProgramCounterTainted()) {
           this->taintRegister(regDst, this->tagsOnProgramCounter);
           isTainted = TAINTED;
         }
+
         return isTainted;
       }
 
@@ -655,16 +660,21 @@ namespace triton {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
-        this->untaintRegister(regDst);
-
         if (this->isMemoryTainted(memSrc)) {
-          this->taintRegister(regDst, this->getTags(memSrc));
+          /* retrieve the tags first, in case regDst == regSrc */
+          auto tags = this->getTags(memSrc);
+          this->untaintRegister(regDst);
+          this->taintRegister(regDst, tags);
           isTainted = TAINTED;
+        } else {
+          this->untaintRegister(regDst);
+          isTainted = !TAINTED;
         }
         if (this->isProgramCounterTainted()) {
           this->taintRegister(regDst, this->tagsOnProgramCounter);
           isTainted = TAINTED;
         }
+
         return isTainted;
       }
 
@@ -680,10 +690,14 @@ namespace triton {
           return this->isMemoryTainted(memDst);
 
         for (triton::uint32 offset = 0; offset < readSize; offset++) {
-          this->untaintMemory(addrDst+offset);  // untaint the destination first, to overwrite.
           if (this->isMemoryTainted(addrSrc+offset)) {
-            this->taintMemory(addrDst+offset, this->getTags(addrSrc+offset, 1));
+            auto tags = this->getTags(addrSrc+offset, 1);
+            this->untaintMemory(addrDst+offset);  // untaint the destination first, to overwrite.
+            this->taintMemory(addrDst+offset, tags);
             isTainted = TAINTED;
+          } else {
+            this->untaintMemory(addrDst+offset);
+            isTainted = !TAINTED;
           }
           if (this->isProgramCounterTainted()) {
             this->taintMemory(addrDst+offset, this->tagsOnProgramCounter);
@@ -717,12 +731,15 @@ namespace triton {
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
 
-        this->untaintMemory(memDst);
-
         /* Check source */
         if (this->isRegisterTainted(regSrc)) {
-          this->taintMemory(memDst, this->getTags(regSrc));
+          auto tags = this->getTags(regSrc);
+          this->untaintMemory(memDst);
+          this->taintMemory(memDst, tags);
           isTainted = TAINTED;
+        } else {
+          this->untaintMemory(memDst);
+          isTainted = !TAINTED;
         }
         if (this->isProgramCounterTainted()) {
           this->taintMemory(memDst, this->tagsOnProgramCounter);
@@ -735,6 +752,7 @@ namespace triton {
       bool TaintEngine::unionRegisterImmediate(const triton::arch::Register& regDst) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
+
         if (this->isProgramCounterTainted()) {
           this->taintRegister(regDst, this->tagsOnProgramCounter);
         }
