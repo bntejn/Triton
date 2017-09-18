@@ -1219,6 +1219,12 @@ namespace triton {
   }
 
 
+  std::set<triton::engines::taint::Tag> API::getTagsOnProgramCounter() {
+    this->checkTaint();
+    return this->taint->getTagsOnProgramCounter();
+  }
+
+
   std::set<triton::engines::taint::Tag> API::getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem) {
     this->checkTaint();
     return this->taint->getTags(mem);

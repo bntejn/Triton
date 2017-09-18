@@ -922,6 +922,9 @@ namespace triton {
         /* std::set::erase returns the number of items removed from the set */
         return this->tagsOnProgramCounter.erase(tag) == 1;
       }
+      std::set<Tag> TaintEngine::getTagsOnProgramCounter() {
+        return this->tagsOnProgramCounter;
+      }
 
     }; /* taint namespace */
   }; /* engines namespace */

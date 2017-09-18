@@ -224,6 +224,9 @@ namespace triton {
           //! Remove one tag tainted on the program counter
           bool untaintProgramCounter(const Tag& tag);
 
+          //! Retrieve the tags on the program counter
+          std::set<Tag> getTagsOnProgramCounter();
+
           //! Returns true if the program counter is tainted
           inline bool isProgramCounterTainted() {
             return this->tagsOnProgramCounter.size() > 0;

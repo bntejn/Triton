@@ -1809,6 +1809,28 @@ namespace triton {
 
         return ret;
       }
+      static PyObject* TritonContext_getTagsOnProgramCounter(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
+
+        try {
+          auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnProgramCounter();
+          triton::usize size = 0, index = 0;
+          size = tags.size();
+          ret = xPyList_New(size);
+          for (auto it = tags.begin(); it != tags.end(); it++) {
+            PyList_SetItem(ret, index, PyTag(*it));
+            index++;
+          }
+        } catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+        return ret;
+      }
+
 
 
       static PyObject* TritonContext_getTaintedRegisters(PyObject* self, PyObject* noarg) {
@@ -3199,6 +3221,7 @@ namespace triton {
         {"getTaintedRegisters",                 (PyCFunction)TritonContext_getTaintedRegisters,                    METH_NOARGS,        ""},
         {"getTagsOnMemory",                     (PyCFunction)TritonContext_getTagsOnMemory,                        METH_O,             ""},
         {"getTagsOnRegister",                   (PyCFunction)TritonContext_getTagsOnRegister,                      METH_O,             ""},
+        {"getTagsOnProgramCounter",             (PyCFunction)TritonContext_getTagsOnProgramCounter,                METH_NOARGS,        ""},
         {"getTaintedSymbolicExpressions",       (PyCFunction)TritonContext_getTaintedSymbolicExpressions,          METH_NOARGS,        ""},
         {"isArchitectureValid",                 (PyCFunction)TritonContext_isArchitectureValid,                    METH_NOARGS,        ""},
         {"isFlag",                              (PyCFunction)TritonContext_isFlag,                                 METH_O,             ""},
