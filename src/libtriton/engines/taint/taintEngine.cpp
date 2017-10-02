@@ -237,7 +237,7 @@ namespace triton {
         this->taintedRegisters.insert(reg.getParent());
 
         if (!tags.empty()) {
-          if (this->registerTagMap.count(reg.getId()) > 0) {
+          if (this->registerTagMap.count(reg.getParent()) > 0) {
             /* already exists. append. */
             this->registerTagMap[reg.getParent()].insert(tags.begin(), tags.end());
           } else {
