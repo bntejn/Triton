@@ -63,6 +63,9 @@ namespace triton {
           // FIXME: We should make sure it is the same as the one in symbolicEngine
           const triton::arch::CpuInterface& cpu;
 
+          //! Program counter (RIP register)
+          const triton::arch::Register pc;
+
         protected:
           //! Defines if the taint engine is enabled or disabled.
           bool enableFlag;
@@ -78,9 +81,6 @@ namespace triton {
 
           //! The map of register to tags
           std::map<triton::uint32, std::set<Tag>> registerTagMap;
-
-          //! A set of tags tainted on the program counter
-          std::set<Tag> tagsOnProgramCounter;
 
           //! Copies a TaintEngine.
           void copy(const TaintEngine& other);
@@ -161,6 +161,9 @@ namespace triton {
           //! Untaints a register. Returns !TAINTED if the register has been untainted correctly. Otherwise it returns the last defined state.
           bool untaintRegister(const triton::arch::Register& reg);
 
+          //! Deletes a tag on a register. Returns !TAINTED if no tag remains after deletion and the register has been untainted. Otherwise it returns the last defined state.
+          bool untaintRegister(const triton::arch::Register& reg, triton::engines::taint::Tag& tag);
+
           //! Abstract union tainting.
           bool taintUnion(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
@@ -218,19 +221,11 @@ namespace triton {
           //! Check if a memory address is tagged.
           bool isTagged(const triton::uint64 addr, const triton::uint32 size);
 
-          //! Taint the program counter with a tag
-          bool taintProgramCounter(Tag tag);
+          //! Remove a tag on a register
+          void removeTag(const triton::arch::Register& reg, const triton::engines::taint::Tag& tag);
 
-          //! Remove one tag tainted on the program counter
-          bool untaintProgramCounter(const Tag& tag);
-
-          //! Retrieve the tags on the program counter
-          std::set<Tag> getTagsOnProgramCounter();
-
-          //! Returns true if the program counter is tainted
-          inline bool isProgramCounterTainted() {
-            return this->tagsOnProgramCounter.size() > 0;
-          }
+          //! Remove a tag on memory
+          void removeTag(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag& tag);
 
         private:
           //! Spreads MemoryImmediate with union.

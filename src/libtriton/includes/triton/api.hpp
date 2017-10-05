@@ -663,14 +663,11 @@ namespace triton {
         //! [**taint api**] - Retrieve the tags assigned to a MemoryAccess
         std::set<triton::engines::taint::Tag> getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem);
 
-        //! [**taint api**] - Retrieve the tags on the program counter
-        std::set<triton::engines::taint::Tag> getTagsOnProgramCounter();
+        //! [**taint api**] - Remove a tag assigned to a register
+        bool removeTagOnRegister(const triton::arch::Register& reg, const triton::engines::taint::Tag& tag);
 
-        //! [**taint api**] - Taint the program counter with a Tag
-        bool taintProgramCounter(triton::engines::taint::Tag tag);
-
-        //! [**taint api**] - Untaint the program counter with a Tag
-        bool untaintProgramCounter(const triton::engines::taint::Tag& tag);
+        //! [**taint api**] - Remove a tag assigned to a register
+        bool removeTagOnMemory(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag& tag);
 
     };
 

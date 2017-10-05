@@ -1219,23 +1219,20 @@ namespace triton {
   }
 
 
-  std::set<triton::engines::taint::Tag> API::getTagsOnProgramCounter() {
-    this->checkTaint();
-    return this->taint->getTagsOnProgramCounter();
-  }
-
-
   std::set<triton::engines::taint::Tag> API::getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem) {
     this->checkTaint();
     return this->taint->getTags(mem);
   }
 
-  bool API::taintProgramCounter(triton::engines::taint::Tag tag) {
-    return this->taint->taintProgramCounter(tag);
+
+  bool API::removeTagOnRegister(const triton::arch::Register& reg, const triton::engines::taint::Tag& tag) {
+    this->taint->removeTag(reg, tag);
+    return this->taint->isRegisterTainted(reg);
   }
 
-  bool API::untaintProgramCounter(const triton::engines::taint::Tag& tag) {
-    return this->taint->untaintProgramCounter(tag);
+  bool API::removeTagOnMemory(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag& tag) {
+    this->taint->removeTag(mem, tag);
+    return this->taint->isMemoryTainted(mem);
   }
 
 }; /* triton namespace */
