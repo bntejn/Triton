@@ -854,7 +854,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_AF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_AF), this->taintEngine->getTags(dst));
       }
 
 
@@ -891,7 +891,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_AF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_AF), this->taintEngine->getTags(dst));
       }
 
 
@@ -926,7 +926,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -953,7 +953,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -980,7 +980,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1007,7 +1007,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1035,7 +1035,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1062,7 +1062,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1089,7 +1089,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1119,7 +1119,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1143,7 +1143,13 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        std::set<triton::engines::taint::Tag> tags;
+        if (parent->isMemory()) {
+          tags = this->taintEngine->getTags(parent->getOriginMemory());
+        } else if (parent->isRegister()) {
+          tags = this->taintEngine->getTags(parent->getOriginRegister());
+        }
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), tags);
       }
 
 
@@ -1168,7 +1174,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1192,7 +1198,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1216,7 +1222,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1252,7 +1258,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1288,7 +1294,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1323,7 +1329,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1358,7 +1364,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1393,7 +1399,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1426,7 +1432,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_CF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1456,7 +1462,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1483,7 +1489,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1510,7 +1516,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1539,7 +1545,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1567,7 +1573,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1594,7 +1600,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1623,7 +1629,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1652,7 +1658,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1687,7 +1693,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1727,7 +1733,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1757,7 +1763,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1797,7 +1803,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1827,7 +1833,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_OF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1862,7 +1868,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_PF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_PF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1904,7 +1910,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, architecture->getRegister(ID_REG_PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_PF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_PF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1926,7 +1932,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_SF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_SF), this->taintEngine->getTags(dst));
       }
 
 
@@ -1954,7 +1960,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_SF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintAssignment(sf, dst);
       }
 
 
@@ -1989,7 +1995,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_SF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintAssignment(sf, dst);
       }
 
 
@@ -2024,7 +2030,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_SF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintAssignment(sf, dst);
       }
 
 
@@ -2054,7 +2060,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_ZF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_ZF), this->taintEngine->getTags(dst));
       }
 
 
@@ -2078,7 +2084,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_ZF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_ZF), this->taintEngine->getTags(src));
       }
 
 
@@ -2114,7 +2120,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_ZF), parent->isTainted);
+        expr->isTainted = this->taintEngine->taintAssignment(zf, dst);
       }
 
 

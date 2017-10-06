@@ -206,6 +206,9 @@ namespace triton {
           //! Taints RegisterRegister with assignment. Returns true if the regDst is tainted.
           bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
+          //! Retrieve the tags assigned to an operand
+          std::set<Tag> getTags(const triton::arch::OperandWrapper& op);
+
           //! Retrieve the tags assigned to a register
           std::set<Tag> getTags(const triton::arch::Register& reg);
 
@@ -213,13 +216,13 @@ namespace triton {
           std::set<Tag> getTags(const triton::arch::MemoryAccess& mem);
 
           //! Retrieve the tags assigned to a memory address
-          std::set<Tag> getTags(const triton::uint64 addr, const triton::uint32 size);
+          std::set<Tag> getTags(const triton::uint64 addr);
 
           //! Check if a register is tagged.
-          bool isTagged(const triton::arch::Register& reg);
+          bool isTagged(const triton::arch::Register& reg) const;
 
           //! Check if a memory address is tagged.
-          bool isTagged(const triton::uint64 addr, const triton::uint32 size);
+          bool isTagged(const triton::uint64 addr, const triton::uint32 size) const;
 
           //! Remove a tag on a register
           void removeTag(const triton::arch::Register& reg, const triton::engines::taint::Tag& tag);
