@@ -49,7 +49,7 @@ namespace triton {
           Tag(char* data);
 
         public:
-          static std::map<std::string, Tag> tagMap;
+          static std::unordered_map<std::string, Tag> tagMap;
 
           static Tag createTag(char *data);
 
