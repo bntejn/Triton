@@ -32,6 +32,9 @@ namespace triton {
         }
       }
 
+      static long Tag_hash(PyObject* self) {
+        (long) PyTag_AsTag(self)->getData().get();
+      }
 
       static PyObject* Tag_str(PyObject* self) {
         try {
@@ -67,7 +70,7 @@ namespace triton {
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */
-        0,                                          /* tp_hash */
+        Tag_hash,                                   /* tp_hash */
         0,                                          /* tp_call */
         (reprfunc)Tag_str,                          /* tp_str */
         0,                                          /* tp_getattro */
