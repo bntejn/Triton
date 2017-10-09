@@ -33,7 +33,7 @@ namespace triton {
       }
 
       static long Tag_hash(PyObject* self) {
-        (long) PyTag_AsTag(self)->getData().get();
+        return (long) PyTag_AsTag(self)->getData().get();
       }
 
       static PyObject* Tag_str(PyObject* self) {
