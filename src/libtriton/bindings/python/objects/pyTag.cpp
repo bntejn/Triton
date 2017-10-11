@@ -36,6 +36,18 @@ namespace triton {
         return (long) PyTag_AsTag(self)->getData().get();
       }
 
+      static int Tag_compare(PyObject* self, PyObject* other) {
+        auto self_val = PyTag_AsTag(self)->getData().get();
+        auto other_val = PyTag_AsTag(other)->getData().get();
+        if (self_val > other_val) {
+          return 1;
+        } else if (self_val == other_val) {
+          return 0;
+        } else {
+          return -1;
+        }
+      }
+
       static PyObject* Tag_str(PyObject* self) {
         try {
           std::stringstream str;
@@ -65,7 +77,7 @@ namespace triton {
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
-        0,                                          /* tp_compare */
+        Tag_compare,                                /* tp_compare */
         0,                                          /* tp_repr */
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
