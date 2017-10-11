@@ -2721,7 +2721,6 @@ namespace triton {
       }
 
 
-      // TODO: in progress
       static PyObject* TritonContext_taintAndTagMemory(PyObject* self, PyObject* args) {
         PyObject* mem = nullptr;
         PyObject* tag = nullptr;

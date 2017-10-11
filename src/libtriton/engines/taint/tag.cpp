@@ -15,11 +15,15 @@ namespace triton {
 
       std::unordered_map<std::string, Tag> Tag::tagMap = std::unordered_map<std::string, Tag>();
 
-      Tag::Tag(char* data) {
+      Tag::Tag(const char* data) {
         this->data = std::make_shared<std::string>(data);
       }
 
-      Tag Tag::createTag(char *data) {
+      Tag::Tag(const Tag& tag) {
+        this->data = tag.getData();
+      }
+
+      Tag Tag::createTag(const char *data) {
         auto tag = Tag::tagMap.find(std::string(data));
         if (tag != Tag::tagMap.end()) {
           return tag->second;

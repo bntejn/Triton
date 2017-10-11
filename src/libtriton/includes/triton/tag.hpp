@@ -46,12 +46,15 @@ namespace triton {
           std::shared_ptr<std::string> data;
 
           //! Initialize a Tag
-          Tag(char* data);
+          Tag(const char* data);
 
         public:
+          //! Copy constructor
+          Tag(const Tag& tag);
+
           static std::unordered_map<std::string, Tag> tagMap;
 
-          static Tag createTag(char *data);
+          static Tag createTag(const char *data);
 
           ~Tag();
 
