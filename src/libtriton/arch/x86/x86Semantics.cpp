@@ -641,6 +641,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
+        std::cout<< "alignAddStack_s ";
         auto dst = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SP));
 
         /* Create symbolic operands */
@@ -662,6 +663,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
+        std::cout<< "alignSubStack_s ";
         auto dst = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SP));
 
         /* Create symbolic operands */
@@ -683,6 +685,7 @@ namespace triton {
 
 
       void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
+        std::cout<< "clearFlag_s ";
         /* Create the semantics */
         auto node = this->astCtxt.bv(0, 1);
 
@@ -695,6 +698,7 @@ namespace triton {
 
 
       void x86Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
+        std::cout<< "setFlag_s ";
         /* Create the semantics */
         auto node = this->astCtxt.bv(1, 1);
 
@@ -707,6 +711,7 @@ namespace triton {
 
 
       void x86Semantics::controlFlow_s(triton::arch::Instruction& inst) {
+        std::cout<< "controlFlow_s ";
         auto pc      = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_IP));
         auto counter = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto zf      = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
@@ -813,7 +818,9 @@ namespace triton {
             auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, architecture->getParentRegister(ID_REG_IP), "Program Counter");
 
             /* Spread taint */
-            expr->isTainted = this->taintEngine->setTaintRegister(architecture->getParentRegister(ID_REG_IP), triton::engines::taint::UNTAINTED);
+            //FIXME
+            expr->isTainted = false;
+            //this->taintEngine->setTaintRegister(architecture->getParentRegister(ID_REG_IP), triton::engines::taint::UNTAINTED);
             break;
           }
         }
@@ -826,6 +833,7 @@ namespace triton {
                               triton::ast::AbstractNode* op1,
                               triton::ast::AbstractNode* op2,
                               bool vol) {
+        std::cout<< "af ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -854,7 +862,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_AF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_AF), dst);
       }
 
 
@@ -863,6 +871,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+        std::cout<< "af_neg ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -891,7 +900,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_AF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_AF), dst);
       }
 
 
@@ -901,6 +910,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_add ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -926,7 +936,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -935,6 +945,7 @@ namespace triton {
                                   triton::arch::OperandWrapper& dst,
                                   triton::ast::AbstractNode* op1,
                                   bool vol) {
+        std::cout<< "cf_blsi ";
 
         /*
          * Create the semantic.
@@ -953,7 +964,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -962,6 +973,7 @@ namespace triton {
                                     triton::arch::OperandWrapper& dst,
                                     triton::ast::AbstractNode* op1,
                                     bool vol) {
+        std::cout<< "cf_blsmsk ";
 
         /*
          * Create the semantic.
@@ -980,7 +992,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -989,6 +1001,7 @@ namespace triton {
                                   triton::arch::OperandWrapper& dst,
                                   triton::ast::AbstractNode* op1,
                                   bool vol) {
+        std::cout<< "cf_blsr ";
 
         /*
          * Create the semantic.
@@ -1007,7 +1020,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1017,6 +1030,7 @@ namespace triton {
                                   triton::ast::AbstractNode* op1,
                                   triton::ast::AbstractNode* res,
                                   bool vol) {
+        std::cout<< "cf_imul ";
 
         /*
          * Create the semantic.
@@ -1035,7 +1049,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1044,6 +1058,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+        std::cout<< "cf_mul ";
 
         /*
          * Create the semantic.
@@ -1062,7 +1077,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1071,6 +1086,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+        std::cout<< "cf_neg ";
 
         /*
          * Create the semantic.
@@ -1089,7 +1105,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1097,6 +1113,7 @@ namespace triton {
                                    triton::engines::symbolic::SymbolicExpression* parent,
                                    triton::arch::OperandWrapper& dst,
                                    bool vol) {
+        std::cout<< "cf_ptest ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1119,7 +1136,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1128,6 +1145,7 @@ namespace triton {
                                  triton::ast::AbstractNode* result,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_rcl ";
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = result->getBitvectorSize() - 1;
@@ -1145,11 +1163,12 @@ namespace triton {
         /* Spread the taint from the parent to the child */
         std::set<triton::engines::taint::Tag> tags;
         if (parent->isMemory()) {
-          tags = this->taintEngine->getTags(parent->getOriginMemory());
+          auto mem = parent->getOriginMemory();
+          expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), mem);
         } else if (parent->isRegister()) {
-          tags = this->taintEngine->getTags(parent->getOriginRegister());
+          auto reg = parent->getOriginRegister();
+          expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), reg);
         }
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), tags);
       }
 
 
@@ -1159,6 +1178,7 @@ namespace triton {
                                  triton::ast::AbstractNode* result,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_rcr ";
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = result->getBitvectorSize() - 1;
@@ -1174,7 +1194,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1183,6 +1203,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_rol ";
 
         auto bvSize = op2->getBitvectorSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1198,7 +1219,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1207,6 +1228,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_ror ";
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1222,7 +1244,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1232,6 +1254,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_sar ";
 
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1258,7 +1281,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1268,6 +1291,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_shl ";
 
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1294,7 +1318,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1305,6 +1329,7 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+        std::cout<< "cf_shld ";
 
         auto bvSize = op3->getBitvectorSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1329,7 +1354,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1339,6 +1364,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_shr ";
 
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1364,7 +1390,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1375,6 +1401,7 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+        std::cout<< "cf_shrd ";
 
         auto bvSize = op3->getBitvectorSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1399,7 +1426,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1409,6 +1436,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "cf_sub ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1432,7 +1460,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_CF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), dst);
       }
 
 
@@ -1442,6 +1470,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_add ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1462,7 +1491,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1489,7 +1518,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1498,6 +1527,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+        std::cout<< "of_mul ";
 
         /*
          * Create the semantic.
@@ -1516,7 +1546,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1525,6 +1555,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+        std::cout<< "of_neg ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1545,7 +1576,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1554,6 +1585,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_rol ";
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1573,7 +1605,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1582,6 +1614,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_ror ";
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1600,7 +1633,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1610,6 +1643,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_rcr ";
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = dst.getBitSize()-1;
@@ -1629,7 +1663,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1638,6 +1672,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_sar ";
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1658,7 +1693,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1668,6 +1703,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_shl ";
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1693,7 +1729,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1704,6 +1740,7 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+        std::cout<< "of_shld ";
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1733,7 +1770,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1743,6 +1780,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_shr ";
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1763,7 +1801,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1774,6 +1812,7 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+        std::cout<< "of_shrd ";
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1803,7 +1842,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1813,6 +1852,7 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "of_sub ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1833,7 +1873,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_OF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_OF), dst);
       }
 
 
@@ -1841,6 +1881,7 @@ namespace triton {
                               triton::engines::symbolic::SymbolicExpression* parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
+        std::cout<< "pf ";
 
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
@@ -1868,7 +1909,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_PF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_PF), dst);
       }
 
 
@@ -1877,6 +1918,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "pf_shl ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1910,7 +1952,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, architecture->getRegister(ID_REG_PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_PF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_PF), dst);
       }
 
 
@@ -1918,6 +1960,7 @@ namespace triton {
                               triton::engines::symbolic::SymbolicExpression* parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
+        std::cout<< "sf ";
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1932,7 +1975,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_SF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_SF), dst);
       }
 
 
@@ -1941,6 +1984,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "sf_shl ";
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1971,6 +2015,7 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+        std::cout<< "sf_shld ";
 
         auto bvSize = op3->getBitvectorSize();
         auto sf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
@@ -2006,6 +2051,7 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+        std::cout<< "sf_shrd ";
 
         auto bvSize = op3->getBitvectorSize();
         auto sf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
@@ -2038,6 +2084,7 @@ namespace triton {
                               triton::engines::symbolic::SymbolicExpression* parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
+        std::cout<< "zf ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -2060,7 +2107,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_ZF), this->taintEngine->getTags(dst));
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_ZF), dst);
       }
 
 
@@ -2069,6 +2116,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& src,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "zf_bsf ";
 
         /*
          * Create the semantic.
@@ -2084,7 +2132,8 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->taintRegister(architecture->getRegister(ID_REG_ZF), this->taintEngine->getTags(src));
+        //TODO
+        expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_ZF), src);
       }
 
 
@@ -2093,6 +2142,7 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+        std::cout<< "zf_shl ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -3122,6 +3172,7 @@ namespace triton {
 
 
       void x86Semantics::call_s(triton::arch::Instruction& inst) {
+        std::cout<< "call_s ";
         auto stack = architecture->getParentRegister(ID_REG_SP);
 
         /* Create the semantics - side effect */
@@ -5191,7 +5242,9 @@ namespace triton {
         inst.setConditionTaken(true);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintAssignment(pc, src);
+        //FIXME
+        expr->isTainted = this->taintEngine->taintUnion(pc, src);
+        //expr->isTainted = this->taintEngine->taintAssignment(pc, src);
 
         /* Create the path constraint */
         this->symbolicEngine->addPathConstraint(inst, expr);
@@ -5761,6 +5814,7 @@ namespace triton {
 
 
       void x86Semantics::mov_s(triton::arch::Instruction& inst) {
+        std::cout<< "mov_s ";
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
