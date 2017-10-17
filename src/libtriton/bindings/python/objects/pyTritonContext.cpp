@@ -1765,8 +1765,6 @@ namespace triton {
         try {
           auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnMemoryAccess(*PyMemoryAccess_AsMemoryAccess(mem));
 
-          triton::usize size = 0;
-          size = tags.size();
           ret = xPySet_New();
           for (auto it = tags.begin(); it != tags.end(); it++) {
             PySet_Add(ret, PyTag(*it));
