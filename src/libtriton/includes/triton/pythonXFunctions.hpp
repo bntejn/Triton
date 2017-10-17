@@ -44,6 +44,9 @@ namespace triton {
       //! Creates a PyList and raises an exception if it fails.
       PyObject* xPyList_New(Py_ssize_t len);
 
+      //! Creates a PySet and raises an exception if it fails.
+      PyObject* xPySet_New();
+
       //! Creates a PyString and raises an exception if it fails.
       PyObject* xPyString_FromString(const char *v);
 

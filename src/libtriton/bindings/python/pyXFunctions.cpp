@@ -36,6 +36,14 @@ namespace triton {
       }
 
 
+      PyObject* xPySet_New() {
+        PyObject* set = PySet_New(nullptr);
+        if (!set)
+          notEnoughMemory();
+        return set;
+      }
+
+
       PyObject* xPyTuple_New(Py_ssize_t len) {
         PyObject* tuple = PyTuple_New(len);
         if (!tuple)
