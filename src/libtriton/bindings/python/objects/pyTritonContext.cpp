@@ -1752,7 +1752,6 @@ namespace triton {
       }
 
 
-      //TODO: in progress
       static PyObject* TritonContext_getTagsOnMemory(PyObject* self, PyObject* mem) {
         PyObject* ret = nullptr;
 
@@ -1763,12 +1762,11 @@ namespace triton {
         try {
           auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnMemoryAccess(*PyMemoryAccess_AsMemoryAccess(mem));
 
-          triton::usize size = 0, index = 0;
+          triton::usize size = 0;
           size = tags.size();
-          ret = xPyList_New(size);
-          for (auto it = begin(tags); it != end(tags); it++) {
-            PyList_SetItem(ret, index, PyTag(*it));
-            index++;
+          ret = xPySet_New();
+          for (auto it = tags.begin(); it != tags.end(); it++) {
+            PySet_Add(ret, PyTag(*it));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1789,12 +1787,9 @@ namespace triton {
         try {
           auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnRegister(*PyRegister_AsRegister(reg));
 
-          triton::usize size = 0, index = 0;
-          size = tags.size();
-          ret = xPyList_New(size);
+          ret = xPySet_New();
           for (auto it = tags.begin(); it != tags.end(); it++) {
-            PyList_SetItem(ret, index, PyTag(*it));
-            index++;
+            PySet_Add(ret, PyTag(*it));
           }
         }
         catch (const triton::exceptions::Exception& e) {
