@@ -641,7 +641,9 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
+#ifdef TJDBG
         std::cout<< "alignAddStack_s ";
+#endif
         auto dst = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SP));
 
         /* Create symbolic operands */
@@ -663,7 +665,9 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
+#ifdef TJDBG
         std::cout<< "alignSubStack_s ";
+#endif
         auto dst = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SP));
 
         /* Create symbolic operands */
@@ -685,7 +689,9 @@ namespace triton {
 
 
       void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
+#ifdef TJDBG
         std::cout<< "clearFlag_s ";
+#endif
         /* Create the semantics */
         auto node = this->astCtxt.bv(0, 1);
 
@@ -698,7 +704,9 @@ namespace triton {
 
 
       void x86Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
+#ifdef TJDBG
         std::cout<< "setFlag_s ";
+#endif
         /* Create the semantics */
         auto node = this->astCtxt.bv(1, 1);
 
@@ -711,7 +719,9 @@ namespace triton {
 
 
       void x86Semantics::controlFlow_s(triton::arch::Instruction& inst) {
+#ifdef TJDBG
         std::cout<< "controlFlow_s ";
+#endif
         auto pc      = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_IP));
         auto counter = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto zf      = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
@@ -833,7 +843,7 @@ namespace triton {
                               triton::ast::AbstractNode* op1,
                               triton::ast::AbstractNode* op2,
                               bool vol) {
-        std::cout<< "af ";
+        std::rout<< "af ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -871,7 +881,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "af_neg ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -910,7 +922,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_add ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -945,7 +959,9 @@ namespace triton {
                                   triton::arch::OperandWrapper& dst,
                                   triton::ast::AbstractNode* op1,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_blsi ";
+#endif
 
         /*
          * Create the semantic.
@@ -973,7 +989,9 @@ namespace triton {
                                     triton::arch::OperandWrapper& dst,
                                     triton::ast::AbstractNode* op1,
                                     bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_blsmsk ";
+#endif
 
         /*
          * Create the semantic.
@@ -1001,7 +1019,9 @@ namespace triton {
                                   triton::arch::OperandWrapper& dst,
                                   triton::ast::AbstractNode* op1,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_blsr ";
+#endif
 
         /*
          * Create the semantic.
@@ -1030,7 +1050,9 @@ namespace triton {
                                   triton::ast::AbstractNode* op1,
                                   triton::ast::AbstractNode* res,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_imul ";
+#endif
 
         /*
          * Create the semantic.
@@ -1058,7 +1080,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_mul ";
+#endif
 
         /*
          * Create the semantic.
@@ -1086,7 +1110,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_neg ";
+#endif
 
         /*
          * Create the semantic.
@@ -1113,7 +1139,9 @@ namespace triton {
                                    triton::engines::symbolic::SymbolicExpression* parent,
                                    triton::arch::OperandWrapper& dst,
                                    bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_ptest ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1145,7 +1173,9 @@ namespace triton {
                                  triton::ast::AbstractNode* result,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_rcl ";
+#endif
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = result->getBitvectorSize() - 1;
@@ -1178,7 +1208,9 @@ namespace triton {
                                  triton::ast::AbstractNode* result,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_rcr ";
+#endif
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = result->getBitvectorSize() - 1;
@@ -1203,7 +1235,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_rol ";
+#endif
 
         auto bvSize = op2->getBitvectorSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1228,7 +1262,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_ror ";
+#endif
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1254,7 +1290,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_sar ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1291,7 +1329,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_shl ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1329,7 +1369,9 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_shld ";
+#endif
 
         auto bvSize = op3->getBitvectorSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1364,7 +1406,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_shr ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1401,7 +1445,9 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_shrd ";
+#endif
 
         auto bvSize = op3->getBitvectorSize();
         auto cf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
@@ -1436,7 +1482,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "cf_sub ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1470,7 +1518,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_add ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1527,7 +1577,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_mul ";
+#endif
 
         /*
          * Create the semantic.
@@ -1555,7 +1607,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op1,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_neg ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1585,7 +1639,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_rol ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1614,7 +1670,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_ror ";
+#endif
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1643,7 +1701,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_rcr ";
+#endif
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = dst.getBitSize()-1;
@@ -1672,7 +1732,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_sar ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1703,7 +1765,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_shl ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1740,7 +1804,9 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "of_shld ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1780,7 +1846,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_shr ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1812,7 +1880,9 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "of_shrd ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
@@ -1852,7 +1922,9 @@ namespace triton {
                                  triton::ast::AbstractNode* op1,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "of_sub ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1881,7 +1953,9 @@ namespace triton {
                               triton::engines::symbolic::SymbolicExpression* parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
+#ifdef TJDBG
         std::cout<< "pf ";
+#endif
 
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
@@ -1918,7 +1992,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "pf_shl ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1960,7 +2036,9 @@ namespace triton {
                               triton::engines::symbolic::SymbolicExpression* parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
+#ifdef TJDBG
         std::cout<< "sf ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1984,7 +2062,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "sf_shl ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -2015,7 +2095,9 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "sf_shld ";
+#endif
 
         auto bvSize = op3->getBitvectorSize();
         auto sf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
@@ -2051,7 +2133,9 @@ namespace triton {
                                   triton::ast::AbstractNode* op2,
                                   triton::ast::AbstractNode* op3,
                                   bool vol) {
+#ifdef TJDBG
         std::cout<< "sf_shrd ";
+#endif
 
         auto bvSize = op3->getBitvectorSize();
         auto sf     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
@@ -2084,7 +2168,9 @@ namespace triton {
                               triton::engines::symbolic::SymbolicExpression* parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
+#ifdef TJDBG
         std::cout<< "zf ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -2116,7 +2202,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& src,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "zf_bsf ";
+#endif
 
         /*
          * Create the semantic.
@@ -2142,7 +2230,9 @@ namespace triton {
                                  triton::arch::OperandWrapper& dst,
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
+#ifdef TJDBG
         std::cout<< "zf_shl ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
@@ -3172,7 +3262,9 @@ namespace triton {
 
 
       void x86Semantics::call_s(triton::arch::Instruction& inst) {
+#ifdef TJDBG
         std::cout<< "call_s ";
+#endif
         auto stack = architecture->getParentRegister(ID_REG_SP);
 
         /* Create the semantics - side effect */
@@ -5814,7 +5906,9 @@ namespace triton {
 
 
       void x86Semantics::mov_s(triton::arch::Instruction& inst) {
+#ifdef TJDBG
         std::cout<< "mov_s ";
+#endif
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
