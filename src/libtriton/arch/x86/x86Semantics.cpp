@@ -843,7 +843,9 @@ namespace triton {
                               triton::ast::AbstractNode* op1,
                               triton::ast::AbstractNode* op2,
                               bool vol) {
+#ifdef TJDBG
         std::cout<< "af ";
+#endif
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
