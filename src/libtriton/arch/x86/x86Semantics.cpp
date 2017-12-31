@@ -843,7 +843,7 @@ namespace triton {
                               triton::ast::AbstractNode* op1,
                               triton::ast::AbstractNode* op2,
                               bool vol) {
-        std::rout<< "af ";
+        std::cout<< "af ";
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
