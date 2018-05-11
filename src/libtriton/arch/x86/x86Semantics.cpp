@@ -4973,7 +4973,10 @@ namespace triton {
             auto  op3  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
             auto  node = this->astCtxt.bvmul(this->astCtxt.sx(src1.getBitSize(), op2), this->astCtxt.sx(src2.getBitSize(), op3));
             auto  expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
-            expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+            // TJ
+            //expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+            expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+            expr->isTainted = expr->isTainted || this->taintEngine->taintUnion(dst, src2);
             this->cfImul_s(inst, expr, dst, this->astCtxt.bvmul(op2, op3), node);
             this->ofImul_s(inst, expr, dst, this->astCtxt.bvmul(op2, op3), node);
             break;
