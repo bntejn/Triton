@@ -260,6 +260,16 @@ namespace triton {
         return !TAINTED;
       }
 
+      /* Sets the flag (taint or untaint) to an abstract operand (Register or Memory). */
+      bool TaintEngine::taintOperand(const triton::arch::OperandWrapper& op, std::set<Tag> tags) {
+        switch (op.getType()) {
+          case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
+          case triton::arch::OP_MEM: return this->taintMemory(op.getConstMemory(), tags);
+          case triton::arch::OP_REG: return this->taintRegister(op.getConstRegister(), tags);
+          default:
+            throw triton::exceptions::TaintEngine("TaintEngine::setTaint(): Invalid operand.");
+        }
+      }
 
       /* Sets the flag (taint or untaint) to an abstract operand (Register or Memory). */
       bool TaintEngine::setTaint(const triton::arch::OperandWrapper& op, bool flag) {

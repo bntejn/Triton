@@ -4315,8 +4315,11 @@ namespace triton {
         auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(63, 0, node3), src3, "XCHG16B RAX operation");
 
         /* Spread taint */
+        auto tags2 = this->taintEngine->getTags(src2);
+        auto tags3 = this->taintEngine->getTags(src3);
+        tags2.insert(tags3.begin(), tags3.end());
         expr1->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3);
-        expr2->isTainted = this->taintEngine->setTaint(src1, this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+        expr2->isTainted = this->taintEngine->taintOperand(src1, tags2);
         expr3->isTainted = this->taintEngine->taintAssignment(src2, src1);
         expr4->isTainted = this->taintEngine->taintAssignment(src3, src1);
 
@@ -4383,8 +4386,11 @@ namespace triton {
           expr6 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(31, 0, node3), src3, "XCHG8B EAX operation");
 
         /* Spread taint */
+        auto tags2 = this->taintEngine->getTags(src2);
+        auto tags3 = this->taintEngine->getTags(src3);
+        tags2.insert(tags3.begin(), tags3.end());
         expr1->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3);
-        expr2->isTainted = this->taintEngine->setTaint(src1, this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+        expr2->isTainted = this->taintEngine->taintOperand(src1, tags2);
         expr3->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3);
         expr4->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3);
         expr5->isTainted = this->taintEngine->taintAssignment(src2, src1);
@@ -4975,8 +4981,10 @@ namespace triton {
             auto  expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
             // TJ
             //expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
-            expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
-            expr->isTainted = expr->isTainted || this->taintEngine->taintUnion(dst, src2);
+            bool t1 = this->taintEngine->taintAssignment(dst, src1);
+            bool t2 = this->taintEngine->taintUnion(dst, src2);
+            expr->isTainted = t1 | t2;
+
             this->cfImul_s(inst, expr, dst, this->astCtxt.bvmul(op2, op3), node);
             this->ofImul_s(inst, expr, dst, this->astCtxt.bvmul(op2, op3), node);
             break;
@@ -5691,7 +5699,11 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, dst, "LEA operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(srcBase) | this->taintEngine->isTainted(srcIndex));
+        //TJ
+        //expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(srcBase) | this->taintEngine->isTainted(srcIndex));
+        bool t1 = this->taintEngine->taintAssignment(dst, srcBase);
+        bool t2 = this->taintEngine->taintUnion(dst, srcIndex);
+        expr->isTainted = t1 | t2;
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12345,8 +12357,6 @@ namespace triton {
       void x86Semantics::xadd_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0];
         auto& src  = inst.operands[1];
-        bool  dstT = this->taintEngine->isTainted(dst);
-        bool  srcT = this->taintEngine->isTainted(src);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -12360,9 +12370,10 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
 
-        /* Spread taint */
-        expr1->isTainted = this->taintEngine->setTaint(dst, srcT);
-        expr2->isTainted = this->taintEngine->setTaint(src, dstT);
+        /* Spread taint, swap the tags */
+        auto tags = this->taintEngine->getTags(dst);
+        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr2->isTainted = this->taintEngine->taintOperand(src, tags);
 
         /* Create symbolic operands */
         op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -12393,8 +12404,6 @@ namespace triton {
       void x86Semantics::xchg_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0];
         auto& src  = inst.operands[1];
-        bool  dstT = this->taintEngine->isTainted(dst);
-        bool  srcT = this->taintEngine->isTainted(src);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -12408,9 +12417,10 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
 
-        /* Spread taint */
-        expr1->isTainted = this->taintEngine->setTaint(dst, srcT);
-        expr2->isTainted = this->taintEngine->setTaint(src, dstT);
+        /* Spread taint, swap the tags */
+        auto tags = this->taintEngine->getTags(dst);
+        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr2->isTainted = this->taintEngine->taintOperand(src, tags);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

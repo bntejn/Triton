@@ -119,6 +119,9 @@ namespace triton {
           //! Abstract taint verification. Returns true if the operand is tainted.
           bool isTainted(const triton::arch::OperandWrapper& op) const;
 
+          //! taint and tag an OperandWrapper
+          bool taintOperand(const triton::arch::OperandWrapper& op, std::set<Tag> tags);
+
           //! Sets the flag (taint or untaint) to an abstract operand (Register or Memory).
           bool setTaint(const triton::arch::OperandWrapper& op, bool flag);
 
