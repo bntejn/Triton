@@ -267,7 +267,18 @@ namespace triton {
           case triton::arch::OP_MEM: return this->taintMemory(op.getConstMemory(), tags);
           case triton::arch::OP_REG: return this->taintRegister(op.getConstRegister(), tags);
           default:
-            throw triton::exceptions::TaintEngine("TaintEngine::setTaint(): Invalid operand.");
+            throw triton::exceptions::TaintEngine("TaintEngine::taintOperand(): Invalid operand.");
+        }
+      }
+
+      /* Sets the flag (taint or untaint) to an abstract operand (Register or Memory). */
+      bool TaintEngine::untaintOperand(const triton::arch::OperandWrapper& op) {
+        switch (op.getType()) {
+          case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
+          case triton::arch::OP_MEM: return this->untaintMemory(op.getConstMemory());
+          case triton::arch::OP_REG: return this->untaintRegister(op.getConstRegister());
+          default:
+            throw triton::exceptions::TaintEngine("TaintEngine::untaintOperand(): Invalid operand.");
         }
       }
 

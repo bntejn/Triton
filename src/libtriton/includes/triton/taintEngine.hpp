@@ -122,6 +122,9 @@ namespace triton {
           //! taint and tag an OperandWrapper
           bool taintOperand(const triton::arch::OperandWrapper& op, std::set<Tag> tags);
 
+          //! untaint and untag an OperandWrapper
+          bool untaintOperand(const triton::arch::OperandWrapper& op);
+
           //! Sets the flag (taint or untaint) to an abstract operand (Register or Memory).
           bool setTaint(const triton::arch::OperandWrapper& op, bool flag);
 

@@ -12419,6 +12419,10 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        if (src == dst) {
+          /* when src == dst, xor always sets dst to 0. Untaint, thusly. */
+          this->taintEngine->untaintOperand(dst);
+        }
 
         /* Upate symbolic flags */
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_CF), "Clears carry flag");
