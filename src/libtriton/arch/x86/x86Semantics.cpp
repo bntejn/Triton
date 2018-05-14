@@ -1193,7 +1193,6 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        std::set<triton::engines::taint::Tag> tags;
         if (parent->isMemory()) {
           auto mem = parent->getOriginMemory();
           expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_CF), mem);
@@ -12347,9 +12346,8 @@ namespace triton {
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
 
         /* Spread taint, swap the tags */
-        auto tags = this->taintEngine->getTags(dst);
         expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
-        expr2->isTainted = this->taintEngine->taintOperand(src, tags);
+        expr2->isTainted = this->taintEngine->taintOperand(src, this->taintEngine->getTags(dst));
 
         /* Create symbolic operands */
         op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -12394,9 +12392,8 @@ namespace triton {
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
 
         /* Spread taint, swap the tags */
-        auto tags = this->taintEngine->getTags(dst);
         expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
-        expr2->isTainted = this->taintEngine->taintOperand(src, tags);
+        expr2->isTainted = this->taintEngine->taintOperand(src, this->taintEngine->getTags(dst));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

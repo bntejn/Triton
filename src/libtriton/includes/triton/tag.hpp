@@ -43,23 +43,23 @@ namespace triton {
       //! A wrapper class that encapsulates a tag data
       class Tag {
         private:
-          std::shared_ptr<std::string> data;
+          std::string data;
 
           //! Initialize a Tag
           Tag(const char* data);
 
-        public:
           //! Copy constructor
           Tag(const Tag& tag);
 
-          static std::unordered_map<std::string, Tag> tagMap;
+        public:
+          static std::unordered_map<std::string, Tag*> tagMap;
 
-          static Tag createTag(const char *data);
+          static Tag* createTag(const char *data);
 
           ~Tag();
 
           //! Retrieve the data
-          std::shared_ptr<std::string> getData() const;
+          std::string getData() const;
 
           bool operator<(const Tag& rhs) const;
 

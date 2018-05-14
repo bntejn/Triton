@@ -26,19 +26,21 @@ namespace triton {
 
       static PyObject* Tag_getData(PyObject* self, PyObject* noarg) {
         try {
-          return (PyObject*) PyString_FromString(PyTag_AsTag(self)->getData()->c_str());
+          return (PyObject*) PyString_FromString(PyTag_AsTag(self)->getData().c_str());
         } catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
       static long Tag_hash(PyObject* self) {
-        return (long) PyTag_AsTag(self)->getData().get();
+        // TODO: test 0514
+        return (long) PyTag_AsTag(self);
       }
 
       static int Tag_compare(PyObject* self, PyObject* other) {
-        auto self_val = PyTag_AsTag(self)->getData().get();
-        auto other_val = PyTag_AsTag(other)->getData().get();
+        // TODO: test 0514
+        auto self_val = PyTag_AsTag(self);
+        auto other_val = PyTag_AsTag(other);
         if (self_val > other_val) {
           return 1;
         } else if (self_val == other_val) {
@@ -119,13 +121,14 @@ namespace triton {
       };
 
 
-      PyObject* PyTag(const triton::engines::taint::Tag& tag) {
+      PyObject* PyTag(triton::engines::taint::Tag* tag) {
+        //TODO: test 0514
         Tag_Object* object;
 
         PyType_Ready(&Tag_Type);
         object = PyObject_NEW(Tag_Object, &Tag_Type);
         if (object != NULL) {
-          object->tag = new triton::engines::taint::Tag(tag);
+          object->tag = tag;
         }
 
         return (PyObject*)object;

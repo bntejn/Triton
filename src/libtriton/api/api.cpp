@@ -1093,7 +1093,7 @@ namespace triton {
   }
 
 
-  bool API::taintMemory(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag tag) {
+  bool API::taintMemory(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag* tag) {
     this->checkTaint();
     return this->taint->taintMemory(mem, tag);
   }
@@ -1105,7 +1105,7 @@ namespace triton {
   }
 
 
-  bool API::taintRegister(const triton::arch::Register& reg, triton::engines::taint::Tag tag) {
+  bool API::taintRegister(const triton::arch::Register& reg, triton::engines::taint::Tag* tag) {
     this->checkTaint();
     return this->taint->taintRegister(reg, tag);
   }
@@ -1213,24 +1213,24 @@ namespace triton {
   }
 
 
-  std::set<triton::engines::taint::Tag> API::getTagsOnRegister(const triton::arch::Register& reg) {
+  std::set<triton::engines::taint::Tag*> API::getTagsOnRegister(const triton::arch::Register& reg) {
     this->checkTaint();
     return this->taint->getTags(reg);
   }
 
 
-  std::set<triton::engines::taint::Tag> API::getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem) {
+  std::set<triton::engines::taint::Tag*> API::getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem) {
     this->checkTaint();
     return this->taint->getTags(mem);
   }
 
 
-  bool API::removeTagOnRegister(const triton::arch::Register& reg, const triton::engines::taint::Tag& tag) {
+  bool API::removeTagOnRegister(const triton::arch::Register& reg, const triton::engines::taint::Tag* tag) {
     this->taint->removeTag(reg, tag);
     return this->taint->isRegisterTainted(reg);
   }
 
-  bool API::removeTagOnMemory(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag& tag) {
+  bool API::removeTagOnMemory(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag* tag) {
     this->taint->removeTag(mem, tag);
     return this->taint->isMemoryTainted(mem);
   }

@@ -2733,7 +2733,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAndTagMemory(): Expects a Tag as the second argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintMemory(*PyMemoryAccess_AsMemoryAccess(mem), *PyTag_AsTag(tag)))
+          if (PyTritonContext_AsTritonContext(self)->taintMemory(*PyMemoryAccess_AsMemoryAccess(mem), PyTag_AsTag(tag)))
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -2777,7 +2777,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAndTagRegister(): Expects a Tag as the second argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintRegister(*PyRegister_AsRegister(reg), *PyTag_AsTag(tag)) == true)
+          if (PyTritonContext_AsTritonContext(self)->taintRegister(*PyRegister_AsRegister(reg), PyTag_AsTag(tag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -3065,7 +3065,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "removeTagOnRegister(): Expects a Tag as the second argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->removeTagOnRegister(*PyRegister_AsRegister(reg), *PyTag_AsTag(tag)) == true)
+          if (PyTritonContext_AsTritonContext(self)->removeTagOnRegister(*PyRegister_AsRegister(reg), PyTag_AsTag(tag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -3091,7 +3091,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "removeTagOnMemory(): Expects a Tag as the second argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->removeTagOnMemory(*PyMemoryAccess_AsMemoryAccess(mem), *PyTag_AsTag(tag)) == true)
+          if (PyTritonContext_AsTritonContext(self)->removeTagOnMemory(*PyMemoryAccess_AsMemoryAccess(mem), PyTag_AsTag(tag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
