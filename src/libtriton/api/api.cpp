@@ -1225,12 +1225,12 @@ namespace triton {
   }
 
 
-  bool API::removeTagOnRegister(const triton::arch::Register& reg, const triton::engines::taint::Tag* tag) {
+  bool API::removeTagOnRegister(const triton::arch::Register& reg, triton::engines::taint::Tag * const tag) {
     this->taint->removeTag(reg, tag);
     return this->taint->isRegisterTainted(reg);
   }
 
-  bool API::removeTagOnMemory(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag* tag) {
+  bool API::removeTagOnMemory(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag * const tag) {
     this->taint->removeTag(mem, tag);
     return this->taint->isMemoryTainted(mem);
   }

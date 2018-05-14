@@ -231,10 +231,10 @@ namespace triton {
           bool isTagged(const triton::uint64 addr, const triton::uint32 size) const;
 
           //! Remove a tag on a register
-          void removeTag(const triton::arch::Register& reg, const triton::engines::taint::Tag* tag);
+          void removeTag(const triton::arch::Register& reg, triton::engines::taint::Tag * const tag);
 
           //! Remove a tag on memory
-          void removeTag(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag* tag);
+          void removeTag(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag * const tag);
 
         private:
           //! Spreads MemoryImmediate with union.

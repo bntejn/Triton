@@ -94,7 +94,7 @@ namespace triton {
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
 
       //! Creates the Tag python class.
-      PyObject* PyTag(const triton::engines::taint::Tag* tag);
+      PyObject* PyTag(triton::engines::taint::Tag * const tag);
 
 
       /* AstNode ======================================================== */

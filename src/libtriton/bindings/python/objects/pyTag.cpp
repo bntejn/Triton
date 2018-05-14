@@ -121,7 +121,7 @@ namespace triton {
       };
 
 
-      PyObject* PyTag(triton::engines::taint::Tag* tag) {
+      PyObject* PyTag(triton::engines::taint::Tag * const tag) {
         //TODO: test 0514
         Tag_Object* object;
 

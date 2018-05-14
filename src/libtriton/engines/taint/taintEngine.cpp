@@ -927,12 +927,12 @@ namespace triton {
       }
 
 
-      void TaintEngine::removeTag(const triton::arch::Register& reg, const triton::engines::taint::Tag* tag) {
+      void TaintEngine::removeTag(const triton::arch::Register& reg, triton::engines::taint::Tag * const tag) {
         this->registerTagMap[reg.getParent()].erase(tag);
       }
 
 
-      void TaintEngine::removeTag(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag* tag) {
+      void TaintEngine::removeTag(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag * const tag) {
         auto addr = mem.getAddress();
         for (triton::uint32 offset= 0; offset < mem.getSize(); offset++) {
           this->memoryTagMap[addr+offset].erase(tag);

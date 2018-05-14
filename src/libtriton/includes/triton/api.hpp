@@ -664,10 +664,10 @@ namespace triton {
         std::set<triton::engines::taint::Tag*> getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem);
 
         //! [**taint api**] - Remove a tag assigned to a register
-        bool removeTagOnRegister(const triton::arch::Register& reg, const triton::engines::taint::Tag* tag);
+        bool removeTagOnRegister(const triton::arch::Register& reg, triton::engines::taint::Tag * const tag);
 
         //! [**taint api**] - Remove a tag assigned to a register
-        bool removeTagOnMemory(const triton::arch::MemoryAccess& mem, const triton::engines::taint::Tag* tag);
+        bool removeTagOnMemory(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag * const tag);
 
     };
 

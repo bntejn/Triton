@@ -13,7 +13,7 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      std::unordered_map<std::string, Tag> Tag::tagMap = std::unordered_map<std::string, Tag>();
+      std::unordered_map<std::string, Tag*> Tag::tagMap = std::unordered_map<std::string, Tag*>();
 
       Tag::Tag(const char* data) {
         this->data = std::string(data);
@@ -29,7 +29,7 @@ namespace triton {
           return (*tagpair).second;
         } else {
           Tag* newTag = new Tag(data);
-          Tag::tagMap.insert(std::pair<std::string, Tag*>(std::string(data), new Tag(data)));
+          Tag::tagMap.insert(std::pair<std::string, Tag*>(std::string(data), newTag));
           return newTag;
         }
       }
