@@ -27,7 +27,7 @@ namespace triton {
         tag.getData();
       }
 
-      std::shared_ptr<Tag> Tag::getTag(const std::string& data) {
+      std::shared_ptr<Tag> Tag::getTag(const std::string data) {
         auto tagpair = Tag::tagMap.find(data);
         if (tagpair != Tag::tagMap.end()) {
           return (*tagpair).second;

@@ -121,7 +121,7 @@ namespace triton {
       };
 
 
-      PyObject* PyTag(const std::shared_ptr<triton::engines::taint::Tag>& tag) {
+      PyObject* PyTag(const std::shared_ptr<triton::engines::taint::Tag> tag) {
         //TODO: test 0514
         Tag_Object* object;
 

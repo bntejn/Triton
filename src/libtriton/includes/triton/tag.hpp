@@ -57,7 +57,7 @@ namespace triton {
           //! Copy constructor
           Tag(const Tag& tag);
 
-          static std::shared_ptr<Tag> getTag(const std::string& data);
+          static std::shared_ptr<Tag> getTag(const std::string data);
 
           static std::shared_ptr<Tag> getTag(const char *data);
 
