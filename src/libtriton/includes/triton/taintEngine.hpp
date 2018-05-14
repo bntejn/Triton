@@ -147,7 +147,7 @@ namespace triton {
           bool taintMemory(const triton::arch::MemoryAccess& mem, const std::set<std::shared_ptr<Tag>>& tags);
 
           //! Taints a memory and assign tags. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintMemory(const triton::arch::MemoryAccess& mem, const std::shared_ptr<Tag>& tag);
+          bool taintMemory(const triton::arch::MemoryAccess& mem, Tag * const tag);
 
           //! Taints a register. Returns TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
           bool taintRegister(const triton::arch::Register& reg);
@@ -156,7 +156,7 @@ namespace triton {
           bool taintRegister(const triton::arch::Register& reg, const std::set<std::shared_ptr<Tag>>& tags);
 
           //! Taints a register and assign tags. Returns TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintRegister(const triton::arch::Register& reg, const std::shared_ptr<Tag>& tag);
+          bool taintRegister(const triton::arch::Register& reg, Tag * const tag);
 
           //! Untaints an address. Returns !TAINTED if the address has been untainted correctly. Otherwise it returns the last defined state.
           bool untaintMemory(triton::uint64 addr);
@@ -231,10 +231,10 @@ namespace triton {
           bool isTagged(const triton::uint64 addr, const triton::uint32 size) const;
 
           //! Remove a tag on a register
-          void removeTag(const triton::arch::Register& reg, const std::shared_ptr<Tag>& tag);
+          void removeTag(const triton::arch::Register& reg, Tag * const tag);
 
           //! Remove a tag on memory
-          void removeTag(const triton::arch::MemoryAccess& mem, const std::shared_ptr<Tag>& tag);
+          void removeTag(const triton::arch::MemoryAccess& mem, Tag * const tag);
 
         private:
           //! Spreads MemoryImmediate with union.

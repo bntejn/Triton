@@ -234,7 +234,7 @@ namespace triton {
       //! pyTag object.
       typedef struct {
         PyObject_HEAD
-        std::shared_ptr<triton::engines::taint::Tag> tag; //! Pointer to the tag type
+        triton::engines::taint::Tag* tag; //! Pointer to the tag type
       } Tag_Object;
 
       //! pyRegister type.

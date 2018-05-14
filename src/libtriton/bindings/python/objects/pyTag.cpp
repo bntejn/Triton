@@ -34,16 +34,16 @@ namespace triton {
 
       static long Tag_hash(PyObject* self) {
         // TODO: test 0514
-        return (long) PyTag_AsTag(self).get();
+        return (long) PyTag_AsTag(self);
       }
 
       static int Tag_compare(PyObject* self, PyObject* other) {
         // TODO: test 0514
-        std::shared_ptr<triton::engines::taint::Tag> self_val = PyTag_AsTag(self);
-        std::shared_ptr<triton::engines::taint::Tag> other_val = PyTag_AsTag(other);
-        if (self_val.get() > other_val.get()) {
+        auto self_val = PyTag_AsTag(self);
+        auto other_val = PyTag_AsTag(other);
+        if (self_val > other_val) {
           return 1;
-        } else if (self_val.get() == other_val.get()) {
+        } else if (self_val == other_val) {
           return 0;
         } else {
           return -1;
@@ -128,7 +128,7 @@ namespace triton {
         PyType_Ready(&Tag_Type);
         object = PyObject_NEW(Tag_Object, &Tag_Type);
         if (object != NULL) {
-          object->tag = tag;
+          object->tag = tag.get();
         }
 
         return (PyObject*)object;
