@@ -13,25 +13,33 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      std::unordered_map<std::string, Tag*> Tag::tagMap = std::unordered_map<std::string, Tag*>();
+      std::unordered_map<std::string, std::shared_ptr<Tag>> Tag::tagMap = std::unordered_map<std::string, std::shared_ptr<Tag>>();
 
       Tag::Tag(const char* data) {
         this->data = std::string(data);
       }
 
-      Tag::Tag(const Tag& tag) {
-        this->data = tag.getData();
+      Tag::Tag(std::string data) {
+        this->data = data;
       }
 
-      Tag* Tag::createTag(const char *data) {
-        auto tagpair = Tag::tagMap.find(std::string(data));
+      Tag::Tag(const Tag& tag) {
+        tag.getData();
+      }
+
+      std::shared_ptr<Tag> Tag::getTag(const std::string& data) {
+        auto tagpair = Tag::tagMap.find(data);
         if (tagpair != Tag::tagMap.end()) {
           return (*tagpair).second;
         } else {
-          Tag* newTag = new Tag(data);
-          Tag::tagMap.insert(std::pair<std::string, Tag*>(std::string(data), newTag));
+          auto newTag = std::make_shared<Tag>(Tag(data));
+          Tag::tagMap.insert(std::pair<std::string, std::shared_ptr<Tag>>(data, newTag));
           return newTag;
         }
+      }
+
+      std::shared_ptr<Tag> Tag::getTag(const char *data) {
+        return Tag::getTag(std::string(data));
       }
 
       Tag::~Tag() {
@@ -42,15 +50,16 @@ namespace triton {
         return this->data;
       }
 
-      bool Tag::operator<(const Tag &rhs) const {
-        // pointer-based comparison. cheaper than string comparison
-        return this->data < rhs.data;
+      /*
+      bool Tag::operator<(const std::shared_ptr<Tag>& rhs) const {
+         // pointer-based comparison. cheaper than string comparison
+         return this->data < rhs.data;
       }
-
-      bool Tag::operator==(const Tag &rhs) const {
-        /* pointer-based comparison */
+      bool Tag::operator==(const std::shared_ptr<Tag>& rhs) const {
+        // pointer-based comparison
         return this->data == rhs.data;
       }
+      */
 
     }; /* taint namespace */
   }; /* engines namespace */

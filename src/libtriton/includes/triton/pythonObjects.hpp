@@ -94,7 +94,7 @@ namespace triton {
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
 
       //! Creates the Tag python class.
-      PyObject* PyTag(triton::engines::taint::Tag * const tag);
+      PyObject* PyTag(const std::shared_ptr<triton::engines::taint::Tag>& tag);
 
 
       /* AstNode ======================================================== */
@@ -234,7 +234,7 @@ namespace triton {
       //! pyTag object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::taint::Tag* tag; //! Pointer to the tag type
+        std::shared_ptr<triton::engines::taint::Tag> tag; //! Pointer to the tag type
       } Tag_Object;
 
       //! pyRegister type.

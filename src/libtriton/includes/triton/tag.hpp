@@ -48,22 +48,27 @@ namespace triton {
           //! Initialize a Tag
           Tag(const char* data);
 
+          //! Initialize a Tag
+          Tag(std::string data);
+
+        public:
           //! Copy constructor
           Tag(const Tag& tag);
 
-        public:
-          static std::unordered_map<std::string, Tag*> tagMap;
+          static std::unordered_map<std::string, std::shared_ptr<Tag>> tagMap;
 
-          static Tag* createTag(const char *data);
+          static std::shared_ptr<Tag> getTag(const std::string& data);
+
+          static std::shared_ptr<Tag> getTag(const char *data);
 
           ~Tag();
 
           //! Retrieve the data
           std::string getData() const;
 
-          bool operator<(const Tag& rhs) const;
+          //bool operator<(const Tag& rhs) const;
 
-          bool operator==(const Tag& rhs) const;
+          //bool operator==(const Tag& rhs) const;
       };
 
     /*! @} End of taint namespace */

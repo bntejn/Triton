@@ -226,13 +226,13 @@ namespace triton {
 
 
       /* Taint a register with a single tag */
-      bool TaintEngine::taintRegister(const triton::arch::Register& reg, Tag* tag) {
-        return this->taintRegister(reg, std::set<Tag*>{tag});
+      bool TaintEngine::taintRegister(const triton::arch::Register& reg, const std::shared_ptr<Tag>& tag) {
+        return this->taintRegister(reg, std::set<std::shared_ptr<Tag>>{tag});
       }
 
 
       /* Taint a register with tags */
-      bool TaintEngine::taintRegister(const triton::arch::Register& reg, std::set<Tag*> tags) {
+      bool TaintEngine::taintRegister(const triton::arch::Register& reg, const std::set<std::shared_ptr<Tag>>& tags) {
         if (!this->isEnabled())
           return this->isRegisterTainted(reg);
         this->taintedRegisters.insert(reg.getParent());
@@ -261,7 +261,7 @@ namespace triton {
       }
 
       /* Sets the flag (taint or untaint) to an abstract operand (Register or Memory). */
-      bool TaintEngine::taintOperand(const triton::arch::OperandWrapper& op, std::set<Tag*> tags) {
+      bool TaintEngine::taintOperand(const triton::arch::OperandWrapper& op, const std::set<std::shared_ptr<Tag>>& tags) {
         switch (op.getType()) {
           case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
           case triton::arch::OP_MEM: return this->taintMemory(op.getConstMemory(), tags);
@@ -341,7 +341,7 @@ namespace triton {
 
 
       /* Taint the memory with tags */
-      bool TaintEngine::taintMemory(const triton::arch::MemoryAccess& mem, std::set<Tag*> tags) {
+      bool TaintEngine::taintMemory(const triton::arch::MemoryAccess& mem, const std::set<std::shared_ptr<Tag>>& tags) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -369,8 +369,8 @@ namespace triton {
 
 
       /* Taint the memory with a single tag */
-      bool TaintEngine::taintMemory(const triton::arch::MemoryAccess& mem, Tag* tag) {
-        return this->taintMemory(mem, std::set<Tag*>{tag});
+      bool TaintEngine::taintMemory(const triton::arch::MemoryAccess& mem, const std::shared_ptr<Tag>& tag) {
+        return this->taintMemory(mem, std::set<std::shared_ptr<Tag>>{tag});
       }
 
 
@@ -384,7 +384,7 @@ namespace triton {
 
 
       /* Taint the address with tags */
-      bool TaintEngine::taintMemory(triton::uint64 addr, std::set<Tag*> tags) {
+      bool TaintEngine::taintMemory(triton::uint64 addr, const std::set<std::shared_ptr<Tag>>& tags) {
         if (!this->isEnabled())
           return this->isMemoryTainted(addr);
         this->taintedMemory.insert(addr);
@@ -877,9 +877,9 @@ namespace triton {
       }
 
 
-      std::set<Tag*> TaintEngine::getTags(const triton::arch::OperandWrapper& op) {
+      std::set<std::shared_ptr<Tag>> TaintEngine::getTags(const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
-          case triton::arch::OP_IMM: return std::set<Tag*>();
+          case triton::arch::OP_IMM: return std::set<std::shared_ptr<Tag>>();
           case triton::arch::OP_MEM: return this->getTags(op.getConstMemory());
           case triton::arch::OP_REG: return this->getTags(op.getConstRegister());
           default:
@@ -888,16 +888,16 @@ namespace triton {
       }
 
 
-      std::set<Tag*> TaintEngine::getTags(const triton::arch::Register& reg) {
+      std::set<std::shared_ptr<Tag>> TaintEngine::getTags(const triton::arch::Register& reg) {
         if (this->isTagged(reg)) {
           return this->registerTagMap[reg.getParent()];
         }
-        return std::set<Tag*>();
+        return std::set<std::shared_ptr<Tag>>();
       }
 
 
-      std::set<Tag*> TaintEngine::getTags(const triton::arch::MemoryAccess& mem) {
-        std::set<Tag*> tagSet;
+      std::set<std::shared_ptr<Tag>> TaintEngine::getTags(const triton::arch::MemoryAccess& mem) {
+        std::set<std::shared_ptr<Tag>> tagSet;
         auto addr = mem.getAddress();
         for (triton::uint32 index = 0; index < mem.getSize(); index++) {
           /* collect all the tags in a given memory range */
@@ -908,7 +908,7 @@ namespace triton {
       }
 
 
-      std::set<Tag*> TaintEngine::getTags(const triton::uint64 addr) {
+      std::set<std::shared_ptr<Tag>> TaintEngine::getTags(const triton::uint64 addr) {
         return this->memoryTagMap[addr];
       }
 
@@ -927,12 +927,12 @@ namespace triton {
       }
 
 
-      void TaintEngine::removeTag(const triton::arch::Register& reg, triton::engines::taint::Tag * const tag) {
+      void TaintEngine::removeTag(const triton::arch::Register& reg, const std::shared_ptr<Tag>& tag) {
         this->registerTagMap[reg.getParent()].erase(tag);
       }
 
 
-      void TaintEngine::removeTag(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag * const tag) {
+      void TaintEngine::removeTag(const triton::arch::MemoryAccess& mem, const std::shared_ptr<Tag>& tag) {
         auto addr = mem.getAddress();
         for (triton::uint32 offset= 0; offset < mem.getSize(); offset++) {
           this->memoryTagMap[addr+offset].erase(tag);

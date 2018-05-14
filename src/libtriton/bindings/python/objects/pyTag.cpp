@@ -19,7 +19,7 @@ namespace triton {
       //! Tag destructor.
       void Tag_dealloc(PyObject* self) {
         std::cout << std::flush;
-        delete PyTag_AsTag(self);
+        //delete PyTag_AsTag(self);
         Py_DECREF(self);
       }
 
@@ -34,16 +34,16 @@ namespace triton {
 
       static long Tag_hash(PyObject* self) {
         // TODO: test 0514
-        return (long) PyTag_AsTag(self);
+        return (long) PyTag_AsTag(self).get();
       }
 
       static int Tag_compare(PyObject* self, PyObject* other) {
         // TODO: test 0514
-        auto self_val = PyTag_AsTag(self);
-        auto other_val = PyTag_AsTag(other);
-        if (self_val > other_val) {
+        std::shared_ptr<triton::engines::taint::Tag> self_val = PyTag_AsTag(self);
+        std::shared_ptr<triton::engines::taint::Tag> other_val = PyTag_AsTag(other);
+        if (self_val.get() > other_val.get()) {
           return 1;
-        } else if (self_val == other_val) {
+        } else if (self_val.get() == other_val.get()) {
           return 0;
         } else {
           return -1;
@@ -121,7 +121,7 @@ namespace triton {
       };
 
 
-      PyObject* PyTag(triton::engines::taint::Tag * const tag) {
+      PyObject* PyTag(const std::shared_ptr<triton::engines::taint::Tag>& tag) {
         //TODO: test 0514
         Tag_Object* object;
 
