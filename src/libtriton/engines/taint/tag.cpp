@@ -15,16 +15,12 @@ namespace triton {
 
       std::unordered_map<std::string, std::shared_ptr<Tag>> Tag::tagMap = std::unordered_map<std::string, std::shared_ptr<Tag>>();
 
-      Tag::Tag(const char* data) {
-        this->data = std::string(data);
-      }
-
       Tag::Tag(std::string data) {
         this->data = data;
       }
 
       Tag::Tag(const Tag& tag) {
-        tag.getData();
+        this->data = tag.getData();
       }
 
       std::shared_ptr<Tag> Tag::getTag(const std::string data) {
@@ -32,7 +28,7 @@ namespace triton {
         if (tagpair != Tag::tagMap.end()) {
           return (*tagpair).second;
         } else {
-          auto newTag = std::make_shared<Tag>(Tag(data));
+          auto newTag = std::make_shared<Tag>(data);
           Tag::tagMap.insert(std::pair<std::string, std::shared_ptr<Tag>>(data, newTag));
           return newTag;
         }
@@ -55,11 +51,11 @@ namespace triton {
          // pointer-based comparison. cheaper than string comparison
          return this->data < rhs.data;
       }
-      bool Tag::operator==(const std::shared_ptr<Tag>& rhs) const {
+       */
+      bool Tag::operator==(const Tag& rhs) const {
         // pointer-based comparison
         return this->data == rhs.data;
       }
-      */
 
     }; /* taint namespace */
   }; /* engines namespace */

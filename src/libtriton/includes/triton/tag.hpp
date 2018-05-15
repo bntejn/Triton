@@ -47,13 +47,10 @@ namespace triton {
 
           static std::unordered_map<std::string, std::shared_ptr<Tag>> tagMap;
 
-          //! Initialize a Tag
-          Tag(const char* data);
-
+        public:
           //! Initialize a Tag
           Tag(std::string data);
 
-        public:
           //! Copy constructor
           Tag(const Tag& tag);
 
@@ -68,7 +65,7 @@ namespace triton {
 
           //bool operator<(const Tag& rhs) const;
 
-          //bool operator==(const Tag& rhs) const;
+          bool operator==(const Tag& rhs) const;
       };
 
     /*! @} End of taint namespace */
