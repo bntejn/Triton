@@ -2442,7 +2442,8 @@ namespace triton {
 //        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ANDN operation");
 
         /* Spread taint */
-        this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+        this->taintEngine->taintAssignment(dst, src1);
+        this->taintEngine->taintUnion(dst, src2);
 
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_CF), "Clears carry flag");
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_OF), "Clears overflow flag");
@@ -3952,7 +3953,7 @@ namespace triton {
 
       void x86Semantics::cmp_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto& src = inst.operands[1];
+//        auto& src = inst.operands[1];
 
 //        /* Create symbolic operands */
 //        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3964,8 +3965,8 @@ namespace triton {
 //        /* Create symbolic expression */
 //        auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node, "CMP operation");
 
-        /* Spread taint */
-        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+//        /* Spread taint */
+//        expr = this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
 
         /* Upate symbolic flags */
         this->af_s(inst, nullptr, dst, nullptr, nullptr, true);
@@ -3982,7 +3983,7 @@ namespace triton {
 
       void x86Semantics::cmpsb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
-        auto& src    = inst.operands[1];
+//        auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
@@ -4025,7 +4026,6 @@ namespace triton {
 //        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
         this->taintEngine->taintUnion(index1, index1);
         this->taintEngine->taintUnion(index2, index2);
 
@@ -4044,7 +4044,7 @@ namespace triton {
 
       void x86Semantics::cmpsd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
-        auto& src    = inst.operands[1];
+//        auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
@@ -4087,7 +4087,7 @@ namespace triton {
 //        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+//        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
         this->taintEngine->taintUnion(index1, index1);
         this->taintEngine->taintUnion(index2, index2);
 
@@ -4106,7 +4106,7 @@ namespace triton {
 
       void x86Semantics::cmpsq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
-        auto& src    = inst.operands[1];
+//        auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
@@ -4149,7 +4149,7 @@ namespace triton {
 //        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+//        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
         this->taintEngine->taintUnion(index1, index1);
         this->taintEngine->taintUnion(index2, index2);
 
@@ -4168,7 +4168,7 @@ namespace triton {
 
       void x86Semantics::cmpsw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
-        auto& src    = inst.operands[1];
+//        auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
@@ -4211,7 +4211,7 @@ namespace triton {
 //        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+//        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
         this->taintEngine->taintUnion(index1, index1);
         this->taintEngine->taintUnion(index2, index2);
 
@@ -4288,7 +4288,7 @@ namespace triton {
 //          expr7 = this->symbolicEngine->createSymbolicExpression(inst, node3, accumulator, "XCHG operation");
 
         /* Spread taint */
-        this->taintEngine->isTainted(accumulator) | this->taintEngine->isTainted(src1);
+//        this->taintEngine->isTainted(accumulator) | this->taintEngine->isTainted(src1);
         this->taintEngine->taintAssignment(src1, src2);
         this->taintEngine->taintAssignment(accumulator, src1);
 
@@ -4666,9 +4666,9 @@ namespace triton {
 
       void x86Semantics::div_s(triton::arch::Instruction& inst) {
         auto& src = inst.operands[0];
-
-        /* Create symbolic operands */
-        auto divisor = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create symbolic operands */
+//        auto divisor = this->symbolicEngine->buildSymbolicOperand(inst, src);
 
         /* Create symbolic expression */
         switch (src.getSize()) {
@@ -12304,7 +12304,8 @@ namespace triton {
 //        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPXOR operation");
 //
         /* Spread taint */
-        this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+        this->taintEngine->taintAssignment(dst, src1);
+        this->taintEngine->taintUnion(dst, src2);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12354,7 +12355,7 @@ namespace triton {
 //        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "ADD operation");
 
         /* Spread taint */
-        expr3->isTainted = this->taintEngine->taintUnion(dst, src);
+        this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
         this->af_s(inst, nullptr, dst, op1, op2);
