@@ -2276,30 +2276,30 @@ namespace triton {
         if (inst.operands.size() == 1)
           src1 = inst.operands[0];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.zx(
-                      BYTE_SIZE_BIT,
-                      this->astCtxt.bvadd(
-                        op2,
-                        this->astCtxt.bvmul(op3, op1)
-                      )
-                    );
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAD operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+//        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.zx(
+//                      BYTE_SIZE_BIT,
+//                      this->astCtxt.bvadd(
+//                        op2,
+//                        this->astCtxt.bvmul(op3, op1)
+//                      )
+//                    );
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAD operation");
 
         /* Spread taint */
         this->taintEngine->taintUnion(dst, dst);
 
         /* Upate symbolic flags */
-        this->pf_s(inst, expr, dsttmp);
-        this->sf_s(inst, expr, dsttmp);
-        this->zf_s(inst, expr, dsttmp);
+        this->pf_s(inst, nullptr, dsttmp);
+        this->sf_s(inst, nullptr, dsttmp);
+        this->zf_s(inst, nullptr, dsttmp);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2371,26 +2371,26 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvadd(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADD operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvadd(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADD operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr, dst, op1, op2);
-        this->cfAdd_s(inst, expr, dst, op1, op2);
-        this->ofAdd_s(inst, expr, dst, op1, op2);
-        this->pf_s(inst, expr, dst);
-        this->sf_s(inst, expr, dst);
-        this->zf_s(inst, expr, dst);
+        this->af_s(inst, nullptr, dst, nullptr, nullptr);
+        this->cfAdd_s(inst, nullptr, dst, nullptr, nullptr);
+        this->ofAdd_s(inst, nullptr, dst, nullptr, nullptr);
+        this->pf_s(inst, nullptr, dst);
+        this->sf_s(inst, nullptr, dst);
+        this->zf_s(inst, nullptr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2401,25 +2401,25 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvand(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AND operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvand(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AND operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_CF), "Clears carry flag");
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_OF), "Clears overflow flag");
-        this->pf_s(inst, expr, dst);
-        this->sf_s(inst, expr, dst);
-        this->zf_s(inst, expr, dst);
+        this->pf_s(inst, nullptr, dst);
+        this->sf_s(inst, nullptr, dst);
+        this->zf_s(inst, nullptr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2430,24 +2430,24 @@ namespace triton {
         auto& dst  = inst.operands[0];
         auto& src1 = inst.operands[1];
         auto& src2 = inst.operands[2];
-
-        /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvand(this->astCtxt.bvnot(op2), op3);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ANDN operation");
+//
+//        /* Create symbolic operands */
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+//        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvand(this->astCtxt.bvnot(op2), op3);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ANDN operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+        this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_CF), "Clears carry flag");
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_OF), "Clears overflow flag");
-        this->sf_s(inst, expr, dst);
-        this->zf_s(inst, expr, dst);
+        this->sf_s(inst, nullptr, dst);
+        this->zf_s(inst, nullptr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3954,26 +3954,26 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.sx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvsub(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node, "CMP operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->astCtxt.sx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvsub(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node, "CMP operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr, dst, op1, op2, true);
-        this->cfSub_s(inst, expr, dst, op1, op2, true);
-        this->ofSub_s(inst, expr, dst, op1, op2, true);
-        this->pf_s(inst, expr, dst, true);
-        this->sf_s(inst, expr, dst, true);
-        this->zf_s(inst, expr, dst, true);
+        this->af_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->cfSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->ofSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->pf_s(inst, nullptr, dst, true);
+        this->sf_s(inst, nullptr, dst, true);
+        this->zf_s(inst, nullptr, dst, true);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3999,43 +3999,43 @@ namespace triton {
           return;
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
-
-        /* Create the semantics */
-        auto node1 = this->astCtxt.bvsub(op1, op2);
-        auto node2 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op3, this->astCtxt.bv(BYTE_SIZE, index1.getBitSize())),
-                       this->astCtxt.bvsub(op3, this->astCtxt.bv(BYTE_SIZE, index1.getBitSize()))
-                     );
-        auto node3 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op4, this->astCtxt.bv(BYTE_SIZE, index2.getBitSize())),
-                       this->astCtxt.bvsub(op4, this->astCtxt.bv(BYTE_SIZE, index2.getBitSize()))
-                     );
-
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSB operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
+//        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
+//        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+//
+//        /* Create the semantics */
+//        auto node1 = this->astCtxt.bvsub(op1, op2);
+//        auto node2 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op3, this->astCtxt.bv(BYTE_SIZE, index1.getBitSize())),
+//                       this->astCtxt.bvsub(op3, this->astCtxt.bv(BYTE_SIZE, index1.getBitSize()))
+//                     );
+//        auto node3 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op4, this->astCtxt.bv(BYTE_SIZE, index2.getBitSize())),
+//                       this->astCtxt.bvsub(op4, this->astCtxt.bv(BYTE_SIZE, index2.getBitSize()))
+//                     );
+//
+//        /* Create symbolic expression */
+//        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSB operation");
+//        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+//        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
-        expr2->isTainted = this->taintEngine->taintUnion(index1, index1);
-        expr3->isTainted = this->taintEngine->taintUnion(index2, index2);
+        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+        this->taintEngine->taintUnion(index1, index1);
+        this->taintEngine->taintUnion(index2, index2);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr1, dst, op1, op2, true);
-        this->cfSub_s(inst, expr1, dst, op1, op2, true);
-        this->ofSub_s(inst, expr1, dst, op1, op2, true);
-        this->pf_s(inst, expr1, dst, true);
-        this->sf_s(inst, expr1, dst, true);
-        this->zf_s(inst, expr1, dst, true);
+        this->af_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->cfSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->ofSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->pf_s(inst, nullptr, dst, true);
+        this->sf_s(inst, nullptr, dst, true);
+        this->zf_s(inst, nullptr, dst, true);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4061,43 +4061,43 @@ namespace triton {
           return;
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
-
-        /* Create the semantics */
-        auto node1 = this->astCtxt.bvsub(op1, op2);
-        auto node2 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op3, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize())),
-                       this->astCtxt.bvsub(op3, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize()))
-                     );
-        auto node3 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op4, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize())),
-                       this->astCtxt.bvsub(op4, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize()))
-                     );
-
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSD operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
+//        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
+//        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+//
+//        /* Create the semantics */
+//        auto node1 = this->astCtxt.bvsub(op1, op2);
+//        auto node2 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op3, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize())),
+//                       this->astCtxt.bvsub(op3, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize()))
+//                     );
+//        auto node3 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op4, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize())),
+//                       this->astCtxt.bvsub(op4, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize()))
+//                     );
+//
+//        /* Create symbolic expression */
+//        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSD operation");
+//        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+//        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
-        expr2->isTainted = this->taintEngine->taintUnion(index1, index1);
-        expr3->isTainted = this->taintEngine->taintUnion(index2, index2);
+        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+        this->taintEngine->taintUnion(index1, index1);
+        this->taintEngine->taintUnion(index2, index2);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr1, dst, op1, op2, true);
-        this->cfSub_s(inst, expr1, dst, op1, op2, true);
-        this->ofSub_s(inst, expr1, dst, op1, op2, true);
-        this->pf_s(inst, expr1, dst, true);
-        this->sf_s(inst, expr1, dst, true);
-        this->zf_s(inst, expr1, dst, true);
+        this->af_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->cfSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->ofSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->pf_s(inst, nullptr, dst, true);
+        this->sf_s(inst, nullptr, dst, true);
+        this->zf_s(inst, nullptr, dst, true);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4123,43 +4123,43 @@ namespace triton {
           return;
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
-
-        /* Create the semantics */
-        auto node1 = this->astCtxt.bvsub(op1, op2);
-        auto node2 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op3, this->astCtxt.bv(QWORD_SIZE, index1.getBitSize())),
-                       this->astCtxt.bvsub(op3, this->astCtxt.bv(QWORD_SIZE, index1.getBitSize()))
-                     );
-        auto node3 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op4, this->astCtxt.bv(QWORD_SIZE, index2.getBitSize())),
-                       this->astCtxt.bvsub(op4, this->astCtxt.bv(QWORD_SIZE, index2.getBitSize()))
-                     );
-
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSQ operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
+//        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
+//        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+//
+//        /* Create the semantics */
+//        auto node1 = this->astCtxt.bvsub(op1, op2);
+//        auto node2 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op3, this->astCtxt.bv(QWORD_SIZE, index1.getBitSize())),
+//                       this->astCtxt.bvsub(op3, this->astCtxt.bv(QWORD_SIZE, index1.getBitSize()))
+//                     );
+//        auto node3 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op4, this->astCtxt.bv(QWORD_SIZE, index2.getBitSize())),
+//                       this->astCtxt.bvsub(op4, this->astCtxt.bv(QWORD_SIZE, index2.getBitSize()))
+//                     );
+//
+//        /* Create symbolic expression */
+//        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSQ operation");
+//        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+//        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
-        expr2->isTainted = this->taintEngine->taintUnion(index1, index1);
-        expr3->isTainted = this->taintEngine->taintUnion(index2, index2);
+        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+        this->taintEngine->taintUnion(index1, index1);
+        this->taintEngine->taintUnion(index2, index2);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr1, dst, op1, op2, true);
-        this->cfSub_s(inst, expr1, dst, op1, op2, true);
-        this->ofSub_s(inst, expr1, dst, op1, op2, true);
-        this->pf_s(inst, expr1, dst, true);
-        this->sf_s(inst, expr1, dst, true);
-        this->zf_s(inst, expr1, dst, true);
+        this->af_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->cfSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->ofSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->pf_s(inst, nullptr, dst, true);
+        this->sf_s(inst, nullptr, dst, true);
+        this->zf_s(inst, nullptr, dst, true);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4185,43 +4185,43 @@ namespace triton {
           return;
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
-
-        /* Create the semantics */
-        auto node1 = this->astCtxt.bvsub(op1, op2);
-        auto node2 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op3, this->astCtxt.bv(WORD_SIZE, index1.getBitSize())),
-                       this->astCtxt.bvsub(op3, this->astCtxt.bv(WORD_SIZE, index1.getBitSize()))
-                     );
-        auto node3 = this->astCtxt.ite(
-                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op4, this->astCtxt.bv(WORD_SIZE, index2.getBitSize())),
-                       this->astCtxt.bvsub(op4, this->astCtxt.bv(WORD_SIZE, index2.getBitSize()))
-                     );
-
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSW operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
+//        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
+//        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+//
+//        /* Create the semantics */
+//        auto node1 = this->astCtxt.bvsub(op1, op2);
+//        auto node2 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op3, this->astCtxt.bv(WORD_SIZE, index1.getBitSize())),
+//                       this->astCtxt.bvsub(op3, this->astCtxt.bv(WORD_SIZE, index1.getBitSize()))
+//                     );
+//        auto node3 = this->astCtxt.ite(
+//                       this->astCtxt.equal(op5, this->astCtxt.bvfalse()),
+//                       this->astCtxt.bvadd(op4, this->astCtxt.bv(WORD_SIZE, index2.getBitSize())),
+//                       this->astCtxt.bvsub(op4, this->astCtxt.bv(WORD_SIZE, index2.getBitSize()))
+//                     );
+//
+//        /* Create symbolic expression */
+//        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMPSW operation");
+//        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+//        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
-        expr2->isTainted = this->taintEngine->taintUnion(index1, index1);
-        expr3->isTainted = this->taintEngine->taintUnion(index2, index2);
+        this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src);
+        this->taintEngine->taintUnion(index1, index1);
+        this->taintEngine->taintUnion(index2, index2);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr1, dst, op1, op2, true);
-        this->cfSub_s(inst, expr1, dst, op1, op2, true);
-        this->ofSub_s(inst, expr1, dst, op1, op2, true);
-        this->pf_s(inst, expr1, dst, true);
-        this->sf_s(inst, expr1, dst, true);
-        this->zf_s(inst, expr1, dst, true);
+        this->af_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->cfSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->ofSub_s(inst, nullptr, dst, nullptr, nullptr, true);
+        this->pf_s(inst, nullptr, dst, true);
+        this->sf_s(inst, nullptr, dst, true);
+        this->zf_s(inst, nullptr, dst, true);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4248,61 +4248,57 @@ namespace triton {
             break;
         }
 
-        /* Create symbolic operands */
-        auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, accumulator);
-        auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op1p = this->symbolicEngine->buildSymbolicOperand(accumulatorp);
-        auto op2p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src1.getRegister())) : accumulatorp.getRegister()));
-        auto op3p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src2.getRegister())) : accumulatorp.getRegister()));
-
-        /* Create the semantics */
-        auto nodeq  = this->astCtxt.equal(op1, op2);
-        auto node1  = this->astCtxt.bvsub(op1, op2);
-        auto node2  = this->astCtxt.ite(nodeq, op3, op2);
-        auto node3  = this->astCtxt.ite(nodeq, op1, op2);
-        auto node2p = this->astCtxt.ite(nodeq, op3p, op2p);
-        auto node3p = this->astCtxt.ite(nodeq, op1p, op2p);
-
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMP operation");
-        auto expr2 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node2, "Temporary operation");
-        auto expr3 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node2p, "Temporary operation");
-        auto expr4 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3, "Temporary operation");
-        auto expr5 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3p, "Temporary operation");
-
-        triton::engines::symbolic::SymbolicExpression* expr6 = nullptr;
-        triton::engines::symbolic::SymbolicExpression* expr7 = nullptr;
-
-        /* Destination */
-        if (nodeq->evaluate() == false && src1.getType() == triton::arch::OP_REG) {
-          const auto& src1p  = this->architecture->getParentRegister(src1.getRegister());
-          expr6 = this->symbolicEngine->createSymbolicRegisterExpression(inst, node2p, src1p, "XCHG operation");
-        } else
-          expr6 = this->symbolicEngine->createSymbolicExpression(inst, node2, src1, "XCHG operation");
-
-        /* Accumulator */
-        if (nodeq->evaluate() == true)
-          expr7 = this->symbolicEngine->createSymbolicExpression(inst, node3p, accumulatorp, "XCHG operation");
-        else
-          expr7 = this->symbolicEngine->createSymbolicExpression(inst, node3, accumulator, "XCHG operation");
+//        /* Create symbolic operands */
+//        auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, accumulator);
+//        auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+//        auto op3  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+//        auto op1p = this->symbolicEngine->buildSymbolicOperand(accumulatorp);
+//        auto op2p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src1.getRegister())) : accumulatorp.getRegister()));
+//        auto op3p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src2.getRegister())) : accumulatorp.getRegister()));
+//
+//        /* Create the semantics */
+//        auto nodeq  = this->astCtxt.equal(op1, op2);
+//        auto node1  = this->astCtxt.bvsub(op1, op2);
+//        auto node2  = this->astCtxt.ite(nodeq, op3, op2);
+//        auto node3  = this->astCtxt.ite(nodeq, op1, op2);
+//        auto node2p = this->astCtxt.ite(nodeq, op3p, op2p);
+//        auto node3p = this->astCtxt.ite(nodeq, op1p, op2p);
+//
+//        /* Create symbolic expression */
+//        auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMP operation");
+//        auto expr2 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node2, "Temporary operation");
+//        auto expr3 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node2p, "Temporary operation");
+//        auto expr4 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3, "Temporary operation");
+//        auto expr5 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3p, "Temporary operation");
+//
+//        triton::engines::symbolic::SymbolicExpression* expr6 = nullptr;
+//        triton::engines::symbolic::SymbolicExpression* expr7 = nullptr;
+//
+//        /* Destination */
+//        if (nodeq->evaluate() == false && src1.getType() == triton::arch::OP_REG) {
+//          const auto& src1p  = this->architecture->getParentRegister(src1.getRegister());
+//          expr6 = this->symbolicEngine->createSymbolicRegisterExpression(inst, node2p, src1p, "XCHG operation");
+//        } else
+//          expr6 = this->symbolicEngine->createSymbolicExpression(inst, node2, src1, "XCHG operation");
+//
+//        /* Accumulator */
+//        if (nodeq->evaluate() == true)
+//          expr7 = this->symbolicEngine->createSymbolicExpression(inst, node3p, accumulatorp, "XCHG operation");
+//        else
+//          expr7 = this->symbolicEngine->createSymbolicExpression(inst, node3, accumulator, "XCHG operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isTainted(accumulator) | this->taintEngine->isTainted(src1);
-        expr2->isTainted = expr1->isTainted;
-        expr3->isTainted = expr1->isTainted;
-        expr4->isTainted = expr1->isTainted;
-        expr5->isTainted = expr1->isTainted;
-        expr6->isTainted = this->taintEngine->taintAssignment(src1, src2);
-        expr7->isTainted = this->taintEngine->taintAssignment(accumulator, src1);
+        this->taintEngine->isTainted(accumulator) | this->taintEngine->isTainted(src1);
+        this->taintEngine->taintAssignment(src1, src2);
+        this->taintEngine->taintAssignment(accumulator, src1);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr1, accumulator, op1, op2, true);
-        this->cfSub_s(inst, expr1, accumulator, op1, op2, true);
-        this->ofSub_s(inst, expr1, accumulator, op1, op2, true);
-        this->pf_s(inst, expr1, accumulator, true);
-        this->sf_s(inst, expr1, accumulator, true);
-        this->zf_s(inst, expr1, accumulator, true);
+        this->af_s(inst, nullptr, accumulator, nullptr, nullptr, true);
+        this->cfSub_s(inst, nullptr, accumulator, nullptr, nullptr, true);
+        this->ofSub_s(inst, nullptr, accumulator, nullptr, nullptr, true);
+        this->pf_s(inst, nullptr, accumulator, true);
+        this->sf_s(inst, nullptr, accumulator, true);
+        this->zf_s(inst, nullptr, accumulator, true);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4643,25 +4639,25 @@ namespace triton {
       void x86Semantics::dec_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.bv(1, dst.getBitSize());
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvsub(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "DEC operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->astCtxt.bv(1, dst.getBitSize());
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvsub(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "DEC operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        this->taintEngine->taintUnion(dst, dst);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr, dst, op1, op2);
-        this->ofSub_s(inst, expr, dst, op1, op2);
-        this->pf_s(inst, expr, dst);
-        this->sf_s(inst, expr, dst);
-        this->zf_s(inst, expr, dst);
+        this->af_s(inst, nullptr, dst, nullptr, nullptr);
+        this->ofSub_s(inst, nullptr, dst, nullptr, nullptr);
+        this->pf_s(inst, nullptr, dst);
+        this->sf_s(inst, nullptr, dst);
+        this->zf_s(inst, nullptr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4680,81 +4676,81 @@ namespace triton {
           case BYTE_SIZE: {
             /* AX */
             auto ax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
-            auto dividend = this->symbolicEngine->buildSymbolicOperand(inst, ax);
-            /* res = AX / Source */
-            auto result = this->astCtxt.bvudiv(dividend, this->astCtxt.zx(BYTE_SIZE_BIT, divisor));
-            /* mod = AX % Source */
-            auto mod = this->astCtxt.bvurem(dividend, this->astCtxt.zx(BYTE_SIZE_BIT, divisor));
-            /* AH = mod */
-            /* AL = res */
-            auto node = this->astCtxt.concat(
-                          this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, mod),   /* AH = mod */
-                          this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, result) /* AL = res */
-                        );
-            /* Create symbolic expression */
-            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "DIV operation");
+//            auto dividend = this->symbolicEngine->buildSymbolicOperand(inst, ax);
+//            /* res = AX / Source */
+//            auto result = this->astCtxt.bvudiv(dividend, this->astCtxt.zx(BYTE_SIZE_BIT, divisor));
+//            /* mod = AX % Source */
+//            auto mod = this->astCtxt.bvurem(dividend, this->astCtxt.zx(BYTE_SIZE_BIT, divisor));
+//            /* AH = mod */
+//            /* AL = res */
+//            auto node = this->astCtxt.concat(
+//                          this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, mod),   /* AH = mod */
+//                          this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, result) /* AL = res */
+//                        );
+//            /* Create symbolic expression */
+//            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "DIV operation");
             /* Apply the taint */
-            expr->isTainted = this->taintEngine->taintUnion(ax, src);
+            this->taintEngine->taintUnion(ax, src);
             break;
           }
 
           case WORD_SIZE: {
             /* DX:AX */
             auto dx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DX));
-            auto ax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, dx), this->symbolicEngine->buildSymbolicOperand(inst, ax));
-            /* res = DX:AX / Source */
-            auto result = this->astCtxt.extract((WORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(WORD_SIZE_BIT, divisor)));
-            /* mod = DX:AX % Source */
-            auto mod = this->astCtxt.extract((WORD_SIZE_BIT - 1), 0, this->astCtxt.bvurem(dividend, this->astCtxt.zx(WORD_SIZE_BIT, divisor)));
-            /* Create the symbolic expression for AX */
-            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, ax, "DIV operation");
-            /* Apply the taint for AX */
-            expr1->isTainted = this->taintEngine->taintUnion(ax, src);
-            /* Create the symbolic expression for DX */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, dx, "DIV operation");
+//            auto ax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
+//            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, dx), this->symbolicEngine->buildSymbolicOperand(inst, ax));
+//            /* res = DX:AX / Source */
+//            auto result = this->astCtxt.extract((WORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(WORD_SIZE_BIT, divisor)));
+//            /* mod = DX:AX % Source */
+//            auto mod = this->astCtxt.extract((WORD_SIZE_BIT - 1), 0, this->astCtxt.bvurem(dividend, this->astCtxt.zx(WORD_SIZE_BIT, divisor)));
+//            /* Create the symbolic expression for AX */
+//            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, ax, "DIV operation");
+//            /* Apply the taint for AX */
+//            expr1->isTainted = this->taintEngine->taintUnion(ax, src);
+//            /* Create the symbolic expression for DX */
+//            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, dx, "DIV operation");
             /* Apply the taint for DX */
-            expr2->isTainted = this->taintEngine->taintUnion(dx, src);
+            this->taintEngine->taintUnion(dx, src);
             break;
           }
 
           case DWORD_SIZE: {
             /* EDX:EAX */
             auto edx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EDX));
-            auto eax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, edx), this->symbolicEngine->buildSymbolicOperand(inst, eax));
-            /* res = EDX:EAX / Source */
-            auto result = this->astCtxt.extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(DWORD_SIZE_BIT, divisor)));
-            /* mod = EDX:EAX % Source */
-            auto mod = this->astCtxt.extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt.bvurem(dividend, this->astCtxt.zx(DWORD_SIZE_BIT, divisor)));
-            /* Create the symbolic expression for EAX */
-            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, eax, "DIV operation");
-            /* Apply the taint for EAX */
-            expr1->isTainted = this->taintEngine->taintUnion(eax, src);
-            /* Create the symbolic expression for EDX */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, edx, "DIV operation");
-            /* Apply the taint for EDX */
-            expr2->isTainted = this->taintEngine->taintUnion(edx, src);
+//            auto eax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
+//            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, edx), this->symbolicEngine->buildSymbolicOperand(inst, eax));
+//            /* res = EDX:EAX / Source */
+//            auto result = this->astCtxt.extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(DWORD_SIZE_BIT, divisor)));
+//            /* mod = EDX:EAX % Source */
+//            auto mod = this->astCtxt.extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt.bvurem(dividend, this->astCtxt.zx(DWORD_SIZE_BIT, divisor)));
+//            /* Create the symbolic expression for EAX */
+//            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, eax, "DIV operation");
+//            /* Apply the taint for EAX */
+//            expr1->isTainted = this->taintEngine->taintUnion(eax, src);
+//            /* Create the symbolic expression for EDX */
+//            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, edx, "DIV operation");
+//            /* Apply the taint for EDX */
+            this->taintEngine->taintUnion(edx, src);
             break;
           }
 
           case QWORD_SIZE: {
             /* RDX:RAX */
             auto rdx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RDX));
-            auto rax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, rdx), this->symbolicEngine->buildSymbolicOperand(inst, rax));
-            /* res = RDX:RAX / Source */
-            auto result = this->astCtxt.extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(QWORD_SIZE_BIT, divisor)));
-            /* mod = RDX:RAX % Source */
-            auto mod = this->astCtxt.extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt.bvurem(dividend, this->astCtxt.zx(QWORD_SIZE_BIT, divisor)));
-            /* Create the symbolic expression for RAX */
-            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, rax, "DIV operation");
-            /* Apply the taint for EAX */
-            expr1->isTainted = this->taintEngine->taintUnion(rax, src);
-            /* Create the symbolic expression for RDX */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, rdx, "DIV operation");
+//            auto rax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
+//            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, rdx), this->symbolicEngine->buildSymbolicOperand(inst, rax));
+//            /* res = RDX:RAX / Source */
+//            auto result = this->astCtxt.extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(QWORD_SIZE_BIT, divisor)));
+//            /* mod = RDX:RAX % Source */
+//            auto mod = this->astCtxt.extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt.bvurem(dividend, this->astCtxt.zx(QWORD_SIZE_BIT, divisor)));
+//            /* Create the symbolic expression for RAX */
+//            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, rax, "DIV operation");
+//            /* Apply the taint for EAX */
+//            expr1->isTainted = this->taintEngine->taintUnion(rax, src);
+//            /* Create the symbolic expression for RDX */
+//            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, rdx, "DIV operation");
             /* Apply the taint for EDX */
-            expr2->isTainted = this->taintEngine->taintUnion(rdx, src);
+            this->taintEngine->taintUnion(rdx, src);
             break;
           }
 
@@ -7094,25 +7090,25 @@ namespace triton {
       void x86Semantics::neg_s(triton::arch::Instruction& inst) {
         auto& src = inst.operands[0];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvneg(op1);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src, "NEG operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvneg(op1);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src, "NEG operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src, src);
+        this->taintEngine->taintUnion(src, src);
 
         /* Upate symbolic flags */
-        this->afNeg_s(inst, expr, src, op1);
-        this->cfNeg_s(inst, expr, src, op1);
-        this->ofNeg_s(inst, expr, src, op1);
-        this->pf_s(inst, expr, src);
-        this->sf_s(inst, expr, src);
-        this->zf_s(inst, expr, src);
+        this->afNeg_s(inst, nullptr, src, nullptr);
+        this->cfNeg_s(inst, nullptr, src, nullptr);
+        this->ofNeg_s(inst, nullptr, src, nullptr);
+        this->pf_s(inst, nullptr, src);
+        this->sf_s(inst, nullptr, src);
+        this->zf_s(inst, nullptr, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7149,25 +7145,25 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvor(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "OR operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvor(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "OR operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_CF), "Clears carry flag");
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_OF), "Clears overflow flag");
-        this->pf_s(inst, expr, dst);
-        this->sf_s(inst, expr, dst);
-        this->zf_s(inst, expr, dst);
+        this->pf_s(inst, nullptr, dst);
+        this->sf_s(inst, nullptr, dst);
+        this->zf_s(inst, nullptr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12297,18 +12293,18 @@ namespace triton {
         auto& src1 = inst.operands[1];
         auto& src2 = inst.operands[2];
 
-        /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvxor(op2, op3);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPXOR operation");
-
+//        /* Create symbolic operands */
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+//        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvxor(op2, op3);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPXOR operation");
+//
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+        this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12335,38 +12331,38 @@ namespace triton {
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
 
-        /* Create the semantics */
-        auto node1 = op2;
-        auto node2 = op1;
-
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
+//        /* Create the semantics */
+//        auto node1 = op2;
+//        auto node2 = op1;
+//
+//        /* Create symbolic expression */
+//        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
+//        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
 
         /* Spread taint, swap the tags */
-        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
-        expr2->isTainted = this->taintEngine->taintOperand(src, this->taintEngine->getTags(dst));
+        this->taintEngine->taintAssignment(dst, src);
+        this->taintEngine->taintOperand(src, this->taintEngine->getTags(dst));
 
-        /* Create symbolic operands */
-        op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node3 = this->astCtxt.bvadd(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "ADD operation");
+//        /* Create symbolic operands */
+//        op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node3 = this->astCtxt.bvadd(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "ADD operation");
 
         /* Spread taint */
         expr3->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
-        this->af_s(inst, expr3, dst, op1, op2);
-        this->cfAdd_s(inst, expr3, dst, op1, op2);
-        this->ofAdd_s(inst, expr3, dst, op1, op2);
-        this->pf_s(inst, expr3, dst);
-        this->sf_s(inst, expr3, dst);
-        this->zf_s(inst, expr3, dst);
+        this->af_s(inst, nullptr, dst, op1, op2);
+        this->cfAdd_s(inst, nullptr, dst, op1, op2);
+        this->ofAdd_s(inst, nullptr, dst, op1, op2);
+        this->pf_s(inst, nullptr, dst);
+        this->sf_s(inst, nullptr, dst);
+        this->zf_s(inst, nullptr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12377,21 +12373,21 @@ namespace triton {
         auto& dst  = inst.operands[0];
         auto& src  = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node1 = op2;
-        auto node2 = op1;
-
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node1 = op2;
+//        auto node2 = op1;
+//
+//        /* Create symbolic expression */
+//        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
+//        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
 
         /* Spread taint, swap the tags */
-        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
-        expr2->isTainted = this->taintEngine->taintOperand(src, this->taintEngine->getTags(dst));
+        this->taintEngine->taintAssignment(dst, src);
+        this->taintEngine->taintOperand(src, this->taintEngine->getTags(dst));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12402,18 +12398,18 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvxor(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XOR operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvxor(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XOR operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        this->taintEngine->taintUnion(dst, src);
         if (src == dst) {
           /* when src == dst, xor always sets dst to 0. Untaint, thusly. */
           this->taintEngine->untaintOperand(dst);
@@ -12422,9 +12418,9 @@ namespace triton {
         /* Upate symbolic flags */
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_CF), "Clears carry flag");
         this->clearFlag_s(inst, architecture->getRegister(ID_REG_OF), "Clears overflow flag");
-        this->pf_s(inst, expr, dst);
-        this->sf_s(inst, expr, dst);
-        this->zf_s(inst, expr, dst);
+        this->pf_s(inst, nullptr, dst);
+        this->sf_s(inst, nullptr, dst);
+        this->zf_s(inst, nullptr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12435,18 +12431,18 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvxor(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XORPD operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvxor(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XORPD operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -12457,18 +12453,18 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
-        /* Create the semantics */
-        auto node = this->astCtxt.bvxor(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XORPS operation");
+//        /* Create symbolic operands */
+//        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+//        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+//
+//        /* Create the semantics */
+//        auto node = this->astCtxt.bvxor(op1, op2);
+//
+//        /* Create symbolic expression */
+//        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XORPS operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
