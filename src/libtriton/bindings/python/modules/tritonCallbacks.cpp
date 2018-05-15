@@ -151,7 +151,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "Tag(): Expects a char* as the first argument.");
         }
         try {
-          return PyTag(triton::engines::taint::Tag::getTag(tagData));
+          return PyTag(triton::engines::taint::Tag::getTag(std::string(tagData)));
         } catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }

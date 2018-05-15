@@ -59,8 +59,6 @@ namespace triton {
 
           static std::shared_ptr<Tag> getTag(const std::string data);
 
-          static std::shared_ptr<Tag> getTag(const char *data);
-
           static std::shared_ptr<Tag> getTag(Tag * const tag);
 
           ~Tag();

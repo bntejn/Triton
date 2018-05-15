@@ -38,10 +38,6 @@ namespace triton {
         }
       }
 
-      std::shared_ptr<Tag> Tag::getTag(const char *data) {
-        return Tag::getTag(std::string(data));
-      }
-
       std::shared_ptr<Tag> Tag::getTag(Tag * const tag) {
         return Tag::getTag(tag->getData());
       }
