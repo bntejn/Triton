@@ -699,7 +699,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->untaintRegister(flag);
+        expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
       }
 
 
@@ -714,9 +714,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
 
         /* Spread taint */
-//        expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
-        expr->isTainted = this->taintEngine->untaintRegister(flag);
-        // TODO
+        expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
       }
 
 
@@ -833,7 +831,6 @@ namespace triton {
             //FIXME
             expr->isTainted = false;
             //this->taintEngine->setTaintRegister(architecture->getParentRegister(ID_REG_IP), triton::engines::taint::UNTAINTED);
-            this->taintEngine->untaintRegister(architecture->getParentRegister(ID_REG_IP));
             break;
           }
         }
@@ -2224,6 +2221,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
+        //TODO
         expr->isTainted = this->taintEngine->taintAssignment(architecture->getRegister(ID_REG_ZF), src);
       }
 
@@ -4552,10 +4550,10 @@ namespace triton {
         auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4, "CPUID DX operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->untaintRegister(architecture->getParentRegister(ID_REG_AX));
-        expr2->isTainted = this->taintEngine->untaintRegister(architecture->getParentRegister(ID_REG_BX));
-        expr3->isTainted = this->taintEngine->untaintRegister(architecture->getParentRegister(ID_REG_CX));
-        expr4->isTainted = this->taintEngine->untaintRegister(architecture->getParentRegister(ID_REG_DX));
+        expr1->isTainted = this->taintEngine->setTaintRegister(architecture->getParentRegister(ID_REG_AX), false);
+        expr2->isTainted = this->taintEngine->setTaintRegister(architecture->getParentRegister(ID_REG_BX), false);
+        expr3->isTainted = this->taintEngine->setTaintRegister(architecture->getParentRegister(ID_REG_CX), false);
+        expr4->isTainted = this->taintEngine->setTaintRegister(architecture->getParentRegister(ID_REG_DX), false);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10150,8 +10148,8 @@ namespace triton {
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, op2, dst2, "RDTSC EAX operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->untaintOperand(dst1);
-        expr2->isTainted = this->taintEngine->untaintOperand(dst2);
+        expr1->isTainted = this->taintEngine->setTaint(dst1, triton::engines::taint::UNTAINTED);
+        expr2->isTainted = this->taintEngine->setTaint(dst2, triton::engines::taint::UNTAINTED);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10739,9 +10737,8 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETA operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().is_zero() && op3->evaluate().is_zero()) {
+        if (op2->evaluate().is_zero() && op3->evaluate().is_zero())
           inst.setConditionTaken(true);
-        }
         expr->isTainted = this->taintEngine->taintAssignment(dst, cf);
         expr->isTainted = this->taintEngine->taintAssignment(dst, zf);
 
@@ -12452,6 +12449,10 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        if (src == dst) {
+          /* when src == dst, xor always sets dst to 0. Untaint. */
+          this->taintEngine->untaintOperand(dst);
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
